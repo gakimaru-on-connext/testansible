@@ -1,0 +1,11 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_redis_server_setup/handlers/main.yml
+
+---
+
+# ----------------------------------------------------------
+- name: Restart redis server
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/roles/package_redis_server_setup/tasks/restart_redis_server.yml"
+
+# ------------------------------------------------------------
+# EOF

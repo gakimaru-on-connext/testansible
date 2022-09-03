@@ -1,0 +1,18 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_mariadb_server_setup/vars/vars.yml
+
+---
+server_conf_path_v10: /etc/my.cnf.d/mariadb-server.cnf
+server_conf_tag_v10: '\[mysqld\]'
+client_conf_path_v10: /etc/my.cnf.d/client.cnf
+client_conf_tag_v10: '\[client-mariadb\]'
+already_root_password_path_v10: /etc/my.cnf.d/already_root_password
+
+server_conf_path_old: /etc/mysql/mysql.conf.d/mysqld.cnf
+server_conf_tag_old: '\[mysqld\]'
+client_conf_path_old: /etc/mysql/conf.d/mysql.cnf
+client_conf_tag_old: '\[mysqld\]'
+already_root_password_path_old: /etc/mysql/mysql.conf.d/already_root_password
+
+# ------------------------------------------------------------
+# EOF

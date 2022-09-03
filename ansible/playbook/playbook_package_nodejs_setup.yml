@@ -1,0 +1,21 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_package_nodejs_setup.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Setup node.js
+  hosts: nodejs
+  tags: nodejs
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_nodejs_setup
+      when: setup_nodejs is defined
+        and setup_nodejs
+        and is_nodejs is defined
+        and is_nodejs
+
+# ------------------------------------------------------------
+# EOF

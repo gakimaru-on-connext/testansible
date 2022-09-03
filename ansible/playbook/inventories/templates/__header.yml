@@ -1,0 +1,16 @@
+# inventory: ansible/playbook/inventories/$FILE
+#
+# DO NOT MODIFY this file directly.
+#
+# Create by ansible/inventories_setup.sh
+#
+# Please modify base inventory:
+#   ansible/playbook/inventories/base/_$FILE
+# and run ansible/inventories_setup.sh
+
+---
+all:
+  children:
+    # ========================================
+    # ホスト設定
+    # ========================================

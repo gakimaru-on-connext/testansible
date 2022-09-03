@@ -1,0 +1,122 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_postgresql_server_setup/tasks/main.yml
+
+---
+
+- name: Include vars
+  ansible.builtin.include_vars: vars.yml
+
+# ------------------------------------------------------------
+# Super user block
+- name: Setup postgresql server by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    # RedHat 9 type on super user block
+    - name: Setup postgresql server on redhat9 by super user
+      when: ansible_distribution_file_variety == "RedHat"
+        and ansible_distribution_major_version == "9"
+      # ignore_errors: true
+      block:
+
+        # ------------------------------------------------------------
+        - name: Install postgresql server
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            # state: latest
+            state: present
+          with_items:
+            - postgresql-server
+            - python3
+            - python3-psycopg2
+
+        # ----------------------------------------------------------
+        - name: Run initdb
+          ansible.builtin.command: "postgresql-setup initdb"
+          args:
+            creates: "{{ server_conf_path }}"
+
+        # ----------------------------------------------------------
+        - name: Start postgresql server
+          ansible.builtin.systemd:
+            name: postgresql
+            state: started
+            # daemon_reload: true
+            enabled: true
+
+        # ------------------------------------------------------------
+        - name: Setup firewalld for postgresql
+          ansible.posix.firewalld:
+            port: 5432/tcp
+            permanent: true
+            immediate: true
+            state: enabled
+
+        # ------------------------------------------------------------
+        # End of [RedHat 9 type block]
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# Postgres-user block
+- name: Setup postgresql server by postgres
+  become: true
+  become_user: "{{ postgresql_postgres_user }}"
+  # ignore_errors: true
+  block:
+
+    # ----------------------------------------------------------
+    - name: Setup postgresql listen addresses
+      ansible.builtin.lineinfile:
+        dest: "{{ server_conf_path }}"
+        insertafter: "#listen_addresses = 'localhost'"
+        line: "listen_addresses = '*'"
+      notify: Restart postgresql server
+
+    # ----------------------------------------------------------
+    - name: Setup admin db
+      community.general.postgresql_db:
+        login_user: "{{ postgresql_postgres_user }}"
+        name: "{{ postgresql_admin_db }}"
+        encoding: "{{ postgresql_encoding }}"
+
+    # ----------------------------------------------------------
+    - name: Setup admin user
+      community.general.postgresql_user:
+        login_user: "{{ postgresql_postgres_user }}"
+        name: "{{ postgresql_admin_user }}"
+        encrypted: true
+        password: "{{ postgresql_admin_hashed_password }}"
+        # encrypted: false
+        # password: "{{ postgresql_admin_user }}"
+        db: "{{ postgresql_admin_db }}"
+        priv: ALL
+        state: present
+
+    # ----------------------------------------------------------
+    - name: Setup admin user access
+      community.general.postgresql_pg_hba:
+        dest: "{{ pg_hba_path }}"
+        address: all
+        contype: host
+        users: "{{ postgresql_admin_user }}"
+        source: "{{ item }}"
+        databases: all
+        method: md5
+        create: true
+      with_items:
+        - localhost
+        - 127.0.0.1
+        - ::1
+        - "{{ postgresql_admin_accessable_host }}"
+      notify: Restart postgresql server
+
+    # ------------------------------------------------------------
+    # End of [Postgres-user block]
+
+# ------------------------------------------------------------
+# EOF

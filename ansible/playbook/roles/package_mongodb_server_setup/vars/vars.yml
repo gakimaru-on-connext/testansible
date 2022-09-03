@@ -1,0 +1,8 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_mongodb_server_setup/vars/vars.yml
+
+---
+server_conf_path: /etc/mongod.conf
+
+# ------------------------------------------------------------
+# EOF

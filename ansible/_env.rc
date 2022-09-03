@@ -1,0 +1,14 @@
+if [ "$(basename $0)" = "_env.rc" ]; then
+    echo "シェルスクリプトから呼び出して下さい"
+    return 1
+fi
+
+if [ -z ${CURDIR+x} ]; then
+    echo "プロビジョニング用シェルスクリプトから呼び出して下さい"
+    exit 1
+fi
+
+PLAYBOOK_DIR=$CURDIR/playbook
+INVENTORIES=inventories
+INVENTORIES_DIR=$PLAYBOOK_DIR/$INVENTORIES
+INVENTORIES_TEMPLATES_DIR=$INVENTORIES_DIR/templates

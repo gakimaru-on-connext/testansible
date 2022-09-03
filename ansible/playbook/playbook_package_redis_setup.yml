@@ -1,0 +1,49 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_package_redis_setup.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Setup redis server
+  hosts: redis
+  tags: redis,redis_server
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_redis_server_setup
+      when: setup_cache is defined
+        and setup_cache
+        and setup_cache_server is defined
+        and setup_cache_server
+        and setup_redis is defined
+        and setup_redis
+        and setup_redis_server is defined
+        and setup_redis_server
+        and is_cache_server is defined
+        and is_cache_server
+        and is_redis is defined
+        and is_redis
+
+# ------------------------------------------------------------
+- name: Setup redis client
+  hosts: all
+  tags: redis,redis_client
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_redis_client_setup
+      when: setup_cache is defined
+        and setup_cache
+        and setup_cache_client is defined
+        and setup_cache_client
+        and setup_redis is defined
+        and setup_redis
+        and setup_redis_client is defined
+        and setup_redis_client
+        and is_cache_client is defined
+        and is_cache_client
+
+# ------------------------------------------------------------
+# EOF

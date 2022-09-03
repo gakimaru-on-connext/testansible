@@ -1,0 +1,27 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_nginx_server_setup/tasks/restart_nginx_server.yml
+
+---
+
+# ------------------------------------------------------------
+# Super user block
+- name: Restart nginx server by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    # RedHat 9 type
+    - name: Restart nginx server on redhat9 by super user
+      when: ansible_distribution_file_variety == "RedHat"
+        and ansible_distribution_major_version == "9"
+      ansible.builtin.systemd:
+        name: nginx
+        state: restarted
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# EOF

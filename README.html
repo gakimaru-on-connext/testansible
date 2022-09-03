@@ -365,15 +365,15 @@ code {
           : 'default'
     });
   </script>
-<h1 id="vagrant-test">Vagrant Test</h1>
+<h1 id="ansible-test">Ansible Test</h1>
 <h2 id="%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA">リポジトリ</h2>
 <ul>
-<li>https://github.com/gakimaru-on-connext/testvagrant</li>
+<li>https://github.com/gakimaru-on-connext/testansible</li>
 </ul>
 <h2 id="%E6%A6%82%E8%A6%81">概要</h2>
 <ul>
 <li>Vagrant を用いた VM 上へのOSセットアップのテスト</li>
-<li>シェルスクリプトによるセットアップを行う</li>
+<li>Ansible によるセットアップを行う</li>
 </ul>
 <h2 id="%E5%BF%85%E8%A6%81%E8%A6%81%E4%BB%B6">必要要件</h2>
 <ul>
@@ -388,7 +388,34 @@ code {
 <li>Vagrant<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> brew install vagrant</span>
 </div></code></pre>
 </li>
+<li>Python3<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> brew install python3</span>
+</div></code></pre>
+</li>
+<li>Ansible<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> brew install ansible</span>
+</div></code></pre>
+</li>
 </ul>
+</li>
+</ul>
+<h2 id="ansible-%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0%E6%BA%96%E5%82%99">Ansible プロビジョニング準備</h2>
+<ul>
+<li>
+<p>インベントリファイルを生成</p>
+<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible</span>
+<span class="hljs-meta">$</span><span class="bash"> bash inventories_setup.sh</span>
+</div></code></pre>
+</li>
+<li>
+<p>インベントリファイルを検証</p>
+<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible</span>
+<span class="hljs-meta">$</span><span class="bash"> bash inventories_verify.sh</span>
+</div></code></pre>
+</li>
+<li>
+<p>Playbook の内容・書き方エラーチェック</p>
+<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible</span>
+<span class="hljs-meta">$</span><span class="bash"> bash ansible_lint.sh</span>
+</div></code></pre>
 </li>
 </ul>
 <h2 id="vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95">VM 操作方法</h2>
@@ -403,6 +430,9 @@ code {
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> vagrant</span>
 <span class="hljs-meta">$</span><span class="bash"> vagrant provision</span>
 </div></code></pre>
+<ul>
+<li>これにより、Ansible が実行される（後述）</li>
+</ul>
 <h3 id="vm-%E5%86%8D%E8%B5%B7%E5%8B%95">VM 再起動</h3>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> vagrant</span>
 <span class="hljs-meta">$</span><span class="bash"> vagrant reload</span>
@@ -420,6 +450,71 @@ code {
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> vagrant</span>
 <span class="hljs-meta">$</span><span class="bash"> vagrant destroy</span>
 </div></code></pre>
+<h2 id="ansible-%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0">Ansible プロビジョニング</h2>
+<h3 id="%E6%96%B9%E6%B3%951-%E7%9B%B4%E6%8E%A5-ansible-playbook-%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%97%E3%81%A6%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0">[方法1] 直接 ansible-playbook コマンドを実行してプロビジョニング</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible/playbook</span>
+<span class="hljs-meta">$</span><span class="bash"> ansible-playbook -i inventories/vagrant_hosts.yml site_all_setup.yml</span>
+</div></code></pre>
+<h3 id="%E6%96%B9%E6%B3%952-vagrant-%E3%81%8B%E3%82%89-ansible-playbook-%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%97%E3%81%A6%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0">[方法2] vagrant から ansible-playbook コマンドを実行してプロビジョニング</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> vagrant</span>
+<span class="hljs-meta">$</span><span class="bash"> vagrant provision</span>
+</div></code></pre>
+<ul>
+<li>
+<p>Vagrantfile 内で [方法1] と同様のコマンドが実行されるように設定されている</p>
+<ul>
+<li>
+<p>vagrant/Vagrantfile</p>
+<pre class="hljs"><code><div>config.vm.provision <span class="hljs-symbol">:ansible</span> <span class="hljs-keyword">do</span> <span class="hljs-params">|ansible|</span>
+  playbook_dir = <span class="hljs-string">"../ansible/playbook"</span>
+  ansible.config_file = playbook_dir + <span class="hljs-string">"/ansible.cfg"</span>
+  ansible.playbook = playbook_dir + <span class="hljs-string">"/site_all_setup.yml"</span>
+  ansible.inventory_path = playbook_dir + <span class="hljs-string">"/inventories/vagrant_hosts.yml"</span>
+  ansible.limit = <span class="hljs-string">'all'</span>
+  <span class="hljs-comment">#ansible.verbose = "vvv"</span>
+  <span class="hljs-comment">#ansible.tags = "tag1,tag2,..."</span>
+  <span class="hljs-comment">#ansible.tags = "os,mariadb"</span>
+<span class="hljs-keyword">end</span>
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%96%B9%E6%B3%953-%E3%82%B7%E3%82%A7%E3%83%AB%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%81%8B%E3%82%89-ansible-playbook-%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%97%E3%81%A6%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0">[方法3] シェルスクリプトから ansible-playbook コマンドを実行してプロビジョニング</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible</span>
+<span class="hljs-meta">$</span><span class="bash"> bash provision_vagrant.sh</span>
+----------------------------------------------------------------------
+[ provision_vagrant.sh ]
+...
+プロビジョニングを開始してもよろしいですか？ (y/n [n])
+</div></code></pre>
+<ul>
+<li>
+<p>シェルスクリプト内で [方法1] と同様のコマンドを呼び出している</p>
+<ul>
+<li>
+<p>ansible/provision_vagrant.sh</p>
+<pre class="hljs"><code><div>TARGET_INVENTORY=vagrant
+TARGET_SITE=all_setup
+
+source $CURDIR/_provision.rc
+
+ansible-playbook -i $INVENTORY_FILE $SITE_FILE --extra-vars "$EXTRA_VARS" $ANSIBLE_OPT
+</div></code></pre>
+</li>
+<li>
+<p>ansible/_provision.rc</p>
+<pre class="hljs"><code><div>...
+cd $PLAYBOOK_DIR
+
+INVENTORY_FILE=$INVENTORIES/${TARGET_INVENTORY}_hosts.yml
+SITE_FILE=site_${TARGET_SITE}.yml
+...
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
 <h2 id="%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E5%86%85%E5%AE%B9">セットアップ内容</h2>
 <h3 id="os">OS</h3>
 <ul>
@@ -450,6 +545,7 @@ code {
 <li>接続</li>
 </ul>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> mysql -u admin -h 192.168.56.10 --password=hogehoge mysql</span>
+mysql [admin@192.168.56.1 mysql] &gt;
 </div></code></pre>
 <h3 id="postgresql">PostgreSQL</h3>
 <ul>
@@ -462,10 +558,12 @@ code {
 <li>接続</li>
 </ul>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> psql -U admin -h 192.168.56.10 -d postgres</span>
-（パスワード入力）hogehoge
+Password for user admin: hogehoge（パスワード入力）
+postgres=&gt;
 </div></code></pre>
 <p>または</p>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> psql <span class="hljs-string">'postgres://admin:hogehoge@192.168.56.10:5432/postgres?sslmode=disable'</span></span>
+postgres=&gt;
 </div></code></pre>
 <h3 id="mongodb">MongoDB</h3>
 <ul>
@@ -477,6 +575,7 @@ code {
 <li>接続</li>
 </ul>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> mongosh 192.168.56.10</span>
+<span class="hljs-meta">test&gt;</span>
 </div></code></pre>
 <h3 id="redis">Redis</h3>
 <ul>
@@ -488,6 +587,7 @@ code {
 <li>接続</li>
 </ul>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> redis-cli -h 192.168.56.10</span>
+192.168.56.10:6379&gt;
 </div></code></pre>
 <h3 id="nginx">Nginx</h3>
 <ul>
@@ -499,24 +599,61 @@ code {
 <li>接続</li>
 </ul>
 <pre class="hljs"><code><div><span class="hljs-meta">$</span><span class="bash"> curl http://192.168.56.10</span>
+...(HTML出力)...
 </div></code></pre>
 <h2 id="%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E6%A7%8B%E6%88%90">ディレクトリ構成</h2>
 <ul>
 <li>vagrant/ ... vagrant 用
 <ul>
-<li>Vagrantfile</li>
+<li>Vagrantfile ... vagrant VM 設定</li>
 </ul>
 </li>
-<li>setup/  ... セットアップ用
+<li>ansible/ ... Ansible 用
 <ul>
-<li>config/ ... 各セットアップで使用する設定ファイル</li>
-<li>setup-os.sh ... OSのセットアップ</li>
-<li>setup-mariadb.sh ... MariaDBのセットアップ</li>
-<li>setup-postgresql.sh ... PostgreSQLのセットアップ</li>
-<li>setup-mongodb.sh ... MongoDBのセットアップ</li>
-<li>setup-redis.sh ... Redisのセットアップ</li>
-<li>setup-nginx.sh ... Nginxのセットアップ</li>
-<li>setup-nodejs.sh ... Node.jsのセットアップ</li>
+<li>playbook/ ... Ansible プレイブック用
+<ul>
+<li>inventories/ ... Ansible インベントリ用
+<ul>
+<li>templates/ ... Ansible インベントリテンプレート用
+<ul>
+<li>***/ ...</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="roles--ansible-%E3%83%AD%E3%83%BC%E3%83%AB%E7%94%A8">roles/ ... Ansible ロール用</h2>
+</li>
+<li>playbook_***.yml ...</li>
+<li>site_***.yml ...</li>
+</ul>
+</li>
+<li>****.sh ...</li>
+<li>****.sh ...</li>
+<li>****.sh ...</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E8%A7%A3%E8%AA%AC">解説</h2>
+<h3 id="vagrant-%E3%81%AE-os-%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E3%81%AE%E6%8C%87%E5%AE%9A">Vagrant の　OS イメージの指定</h3>
+<ul>
+<li>Vagrantfile 内の config.vm.box にて、VM の OS イメージを指定<pre class="hljs"><code><div>config.vm.box = <span class="hljs-string">"generic/rocky9"</span>
+</div></code></pre>
+</li>
+</ul>
+<h3 id="ansible-%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9%E3%81%AE%E7%89%B9%E5%BE%B4">Ansible の使い方の特徴</h3>
+<ul>
+<li>インベントリファイルは、一般的な ini 形式ではなく yml 形式を採用</li>
+<li>インベントリには group_vars を用いずに、一つのインベントリファイルに環境固有の変数をまとめて定義するスタイル
+<ul>
+<li>group_vars を用いる場合よりもシンプルでわかり易い</li>
+</ul>
+</li>
+<li>複数の環境向けのインベントリを用意することを考慮し、環境固有の設定と共通設定を分けて ansible/playbook/inventories/templates/_<em>.yml に定義し、ansible/inventories_setup.sh によってそれらを合成して ansible/playbook/inventories/</em>.yml を出力</li>
+<li>ansible-lint の標準規則に従った内容で構成</li>
+<li>プレイブックは roles と site で構成
+<ul>
+<li>サーバーの役割ごとのプレイブックをまとめやすいため</li>
 </ul>
 </li>
 </ul>

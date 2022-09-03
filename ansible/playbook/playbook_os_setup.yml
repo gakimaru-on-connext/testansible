@@ -1,0 +1,22 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_os_setup.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Setup os
+  hosts: all
+  tags: os
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: os_base_setup
+      when: setup_os_base is defined
+        and setup_os_base
+    - role: os_user_setup
+      when: setup_os_user is defined
+        and setup_os_user
+
+# ------------------------------------------------------------
+# EOF

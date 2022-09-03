@@ -1,0 +1,138 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_mariadb_server_setup/tasks/main.yml
+
+---
+
+- name: Include vars
+  ansible.builtin.include_vars: vars.yml
+
+# ------------------------------------------------------------
+# Super user block
+- name: Setup mariadb server by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    # RedHat 9 type on super user block
+    - name: Setup mariadb server on redhat9 by super user
+      when: ansible_distribution_file_variety == "RedHat"
+        and ansible_distribution_major_version == "9"
+      # ignore_errors: true
+      block:
+
+        # ------------------------------------------------------------
+        - name: Install mariadb server
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            # state: latest
+            state: present
+          with_items:
+            - mariadb-server
+            - python3
+            - python3-pip
+            # - python3-devel
+            # - gcc
+
+        # ----------------------------------------------------------
+        - name: Install pip for mariadb server
+          ansible.builtin.pip:
+            name:
+              - PyMySQL
+            state: present
+            executable: pip3
+
+        # ----------------------------------------------------------
+        - name: Start mariadb server
+          ansible.builtin.systemd:
+            name: mariadb
+            state: started
+            # daemon_reload: true
+            enabled: true
+
+        # ------------------------------------------------------------
+        - name: Setup firewalld for mariadb
+          ansible.posix.firewalld:
+            port: 3306/tcp
+            permanent: true
+            immediate: true
+            state: enabled
+
+        # ----------------------------------------------------------
+        - name: Setup character-set-server
+          ansible.builtin.lineinfile:
+            dest: "{{ server_conf_path_v10 }}"
+            insertafter: "{{ server_conf_tag_v10 }}"
+            line: "character-set-server={{ mariadb_character_set }}"
+          notify: Restart mariadb server
+
+        # ----------------------------------------------------------
+        - name: Setup default-character-set
+          ansible.builtin.lineinfile:
+            dest: "{{ client_conf_path_v10 }}"
+            insertafter: "{{ client_conf_tag_v10 }}"
+            line: "default-character-set={{ mariadb_character_set }}"
+          notify: Restart mariadb server
+
+        # ------------------------------------------------------------
+        # End of [RedHat 9 type block]
+
+    # ----------------------------------------------------------
+    - name: Setup root user password 1
+      # community.mysql.mysql_query:
+      #   login_user: "{{ mariadb_root_user }}"
+      #   login_password: "{{ mariadb_root_password }}"
+      #   login_db: mysql
+      #   query: SET PASSWORD FOR "{{ mariadb_root_user }}"@"localhost" = PASSWORD("{{ mariadb_root_password }}");
+      ansible.builtin.command: "mysql mysql -e'SET PASSWORD FOR \"{{ mariadb_root_user }}\"@\"localhost\" = PASSWORD(\"{{ mariadb_root_password }}\")'"
+      args:
+        creates: "{{ already_root_password_path_v10 }}"
+
+    # ----------------------------------------------------------
+    - name: Setup root user password 2
+      ansible.builtin.file:
+        path: "{{ already_root_password_path_v10 }}"
+        state: touch
+
+    # ----------------------------------------------------------
+    - name: Setup admin db
+      community.mysql.mysql_db:
+        login_user: "{{ mariadb_root_user }}"
+        login_password: "{{ mariadb_root_password }}"
+        # check_implicit_admin: true
+        name: "{{ mariadb_admin_db }}"
+        state: present
+
+    # ----------------------------------------------------------
+    - name: Setup admin user
+      community.mysql.mysql_user:
+        login_user: "{{ mariadb_root_user }}"
+        login_password: "{{ mariadb_root_password }}"
+        # check_implicit_admin: true
+        name: "{{ mariadb_admin_user }}"
+        password: "{{ mariadb_admin_password }}"
+        host: "{{ item }}"
+        priv: "*.*:ALL,GRANT"
+        state: present
+      with_items:
+        - localhost
+        - 127.0.0.1
+        - ::1
+        - "{{ mariadb_admin_accessable_host }}"
+
+    # ----------------------------------------------------------
+    - name: Delete anonymous user
+      community.mysql.mysql_user:
+        login_user: "{{ mariadb_root_user }}"
+        login_password: "{{ mariadb_root_password }}"
+        # check_implicit_admin: true
+        name: ""
+        host_all: true
+        state: absent
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# EOF

@@ -1,0 +1,25 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_package_nginx_setup.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Setup nginx
+  hosts: nginx
+  tags: nginx
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_nginx_server_setup
+      when: setup_web_server is defined
+        and setup_web_server
+        and setup_nginx_server is defined
+        and setup_nginx_server
+        and is_web_server is defined
+        and is_web_server
+        and is_nginx is defined
+        and is_nginx
+
+# ------------------------------------------------------------
+# EOF

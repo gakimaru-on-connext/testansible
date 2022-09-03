@@ -1,0 +1,49 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_package_postgresql_setup.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Setup postgresql server
+  hosts: postgresql
+  tags: postgresql,postgresql_server
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_postgresql_server_setup
+      when: setup_rdb is defined
+        and setup_rdb
+        and setup_rdb_server is defined
+        and setup_rdb_server
+        and setup_postgresql is defined
+        and setup_postgresql
+        and setup_postgresql_server is defined
+        and setup_postgresql_server
+        and is_rdb_server is defined
+        and is_rdb_server
+        and is_postgresql is defined
+        and is_postgresql
+
+# ------------------------------------------------------------
+- name: Setup postgresql client
+  hosts: all
+  tags: postgresql,postgresql_client
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_postgresql_client_setup
+      when: setup_rdb is defined
+        and setup_rdb
+        and setup_rdb_client is defined
+        and setup_rdb_client
+        and setup_postgresql is defined
+        and setup_postgresql
+        and setup_postgresql_client is defined
+        and setup_postgresql_client
+        and is_rdb_client is defined
+        and is_rdb_client
+
+# ------------------------------------------------------------
+# EOF

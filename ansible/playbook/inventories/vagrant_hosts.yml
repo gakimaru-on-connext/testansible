@@ -1,0 +1,522 @@
+# inventory: ansible/playbook/inventories/vagrant_hosts.yml
+#
+# DO NOT MODIFY this file directly.
+#
+# Create by ansible/inventories_setup.sh
+#
+# Please modify base inventory:
+#   ansible/playbook/inventories/base/_vagrant_hosts.yml
+# and run ansible/inventories_setup.sh
+
+---
+all:
+  children:
+    # ========================================
+    # ホスト設定
+    # ========================================
+    # --------------------
+    # ホスト（物理）
+    # --------------------
+    # ホスト01
+    host_01:
+      hosts:
+        192.168.56.10:
+          host_name: testdocker
+          ansible_host: 192.168.56.10
+          ansible_port: 22
+          ansible_user: vagrant
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト02
+    host_02:
+      hosts:
+        # 192.168.56.11:
+        #   host_name: testdocker02
+        #   ansible_host: 192.168.56.11
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト03
+    host_03:
+      hosts:
+        # 192.168.56.12:
+        #   host_name: testdocker03
+        #   ansible_host: 192.168.56.12
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト04
+    host_04:
+      hosts:
+        # 192.168.56.13:
+        #   host_name: testdocker04
+        #   ansible_host: 192.168.56.13
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト05
+    host_05:
+      hosts:
+        # 192.168.56.14:
+        #   host_name: testdocker05
+        #   ansible_host: 192.168.56.14
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト06
+    host_06:
+      hosts:
+        # 192.168.56.15:
+        #   host_name: testdocker06
+        #   ansible_host: 192.168.56.15
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト07
+    host_07:
+      hosts:
+        # 192.168.56.16:
+        #   host_name: testdocker07
+        #   ansible_host: 192.168.56.16
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # ホスト08
+    host_08:
+      hosts:
+        # 192.168.56.17:
+        #   host_name: testdocker08
+        #   ansible_host: 192.168.56.17
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+    # --------------------
+    # 基本ホストグループ
+    # --------------------
+    # RDBマスター
+    rdb_master_hosts:
+      children:
+        host_01:
+      vars:
+        is_rdb_master: true
+    # RDBスレーブ
+    rdb_slave_hosts:
+      children:
+        host_02:
+        host_03:
+      vars:
+        is_rdb_master: false
+    # RDB
+    rdb_hosts:
+      children:
+        rdb_master_hosts:
+        rdb_slave_hosts:
+    # ドキュメントDB（シャード01:マスター）
+    ddb_shard_01_master_hosts:
+      children:
+        host_01:
+      vars:
+        ddb_shard: 1
+    # ドキュメントDB（シャード02:マスター）
+    ddb_shard_02_master_hosts:
+      children:
+        host_02:
+      vars:
+        ddb_shard: 2
+    # ドキュメントDB（シャード01:レプリカ）
+    ddb_shard_01_replica_hosts:
+      children:
+        host_03:
+      vars:
+        ddb_shard: 1
+    # ドキュメントDB（シャード02:レプリカ）
+    ddb_shard_02_replica_hosts:
+      children:
+        host_04:
+      vars:
+        ddb_shard: 2
+    # ドキュメントDB（マスター）
+    ddb_master_hosts:
+      children:
+        ddb_shard_01_master_hosts:
+        ddb_shard_02_master_hosts:
+      vars:
+        is_ddb_master: true
+    # ドキュメントDB（レプリカ）
+    ddb_replica_hosts:
+      children:
+        ddb_shard_01_replica_hosts:
+        ddb_shard_02_replica_hosts:
+      vars:
+        is_ddb_master: false
+    # キャッシュ（シャード01:マスター）
+    cache_shard_01_master_hosts:
+      children:
+        host_01:
+      vars:
+        cache_shard: 1
+    # キャッシュ（シャード02:マスター）
+    cache_shard_02_master_hosts:
+      children:
+        host_02:
+      vars:
+        cache_shard: 2
+    # キャッシュ（シャード03:マスター）
+    cache_shard_03_master_hosts:
+      children:
+        host_03:
+      vars:
+        cache_shard: 3
+    # キャッシュ（シャード01:レプリカ）
+    cache_shard_01_replica_hosts:
+      children:
+        host_04:
+      vars:
+        cache_shard: 1
+    # キャッシュ（シャード02:レプリカ）
+    cache_shard_02_replica_hosts:
+      children:
+        host_05:
+      vars:
+        cache_shard: 2
+    # キャッシュ（シャード03:レプリカ）
+    cache_shard_03_replica_hosts:
+      children:
+        host_06:
+      vars:
+        cache_shard: 3
+    # キャッシュ（マスター）
+    cache_master_hosts:
+      children:
+        cache_shard_01_master_hosts:
+        cache_shard_02_master_hosts:
+        cache_shard_03_master_hosts:
+      vars:
+        is_cache_master: true
+    # キャッシュ（レプリカ）
+    cache_replica_hosts:
+      children:
+        cache_shard_01_replica_hosts:
+        cache_shard_02_replica_hosts:
+        cache_shard_03_replica_hosts:
+      vars:
+        is_cache_master: false
+    # Webフロントエンド
+    front_hosts:
+      children:
+        host_01:
+        host_02:
+        host_03:
+        host_04:
+        host_05:
+        host_06:
+        host_07:
+        host_08:
+    # WebAPI
+    api_hosts:
+      children:
+        host_01:
+        host_02:
+        host_03:
+        host_04:
+        host_05:
+        host_06:
+        host_07:
+        host_08:
+    # 管理サーバー
+    admin_hosts:
+      children:
+        host_01:
+    # node.js アプリ
+    nodejs_hosts:
+      children:
+        host_01:
+    # コンテナ
+    container_hosts:
+      children:
+        rdb_hosts:
+        ddb_hosts:
+        front_hosts:
+        api_hosts:
+        admin_hosts:
+    # コンテナオーケストレーションサーバー
+    container_orchestration_hosts:
+      children:
+        host_01:
+    # --------------------
+    # 役割別ホストグループ
+    # --------------------
+    # 全RDBサーバー
+    rdb_all:
+      children:
+        rdb_master_hosts:
+        rdb_slave_hosts:
+      vars:
+        is_rdb_server: true
+    # 全ドキュメントDBサーバー
+    ddb_all:
+      children:
+        ddb_master_hosts:
+        ddb_replica_hosts:
+      vars:
+        is_ddb_server: true
+    # 全DBサーバー
+    db_all:
+      children:
+        rdb_all:
+        ddb_all:
+      vars:
+        is_db_server: true
+    # 全キャッシュサーバー
+    cache_all:
+      children:
+        cache_master_hosts:
+        cache_replica_hosts:
+      vars:
+        is_cache_server: true
+    # 全Webフロントエンドサーバー
+    front_all:
+      children:
+        front_hosts:
+      vars:
+        is_front_server: true
+    # 全WebAPIサーバー
+    api_all:
+      children:
+        api_hosts:
+      vars:
+        is_api_server: true
+    # 全管理サーバー
+    admin_all:
+      children:
+        admin_hosts:
+      vars:
+        is_admin_server: true
+        is_container_client: true
+        is_container_orchestration_client: true
+    # 全Webサーバー
+    web_all:
+      children:
+        front_all:
+        api_all:
+        admin_all:
+      vars:
+        is_web_server: true
+        is_rdb_client: true
+        is_ddb_client: true
+        is_cache_client: true
+    # コンテナ
+    container_all:
+      children:
+        container_hosts:
+      vars:
+        is_container_server: true
+        is_container_client: true
+    # コンテナオーケストレーション
+    container_orchestration_all:
+      children:
+        container_orchestration_hosts:
+      vars:
+        is_container_orchestration_server: true
+        is_container_client: true
+    # 全ホスト
+    hosts_all:
+      children:
+        db_all:
+        cache_all:
+        web_all:
+        nodejs_all:
+        container_all:
+        container_orchestration_all:
+    # --------------------
+    # パッケージ別ホストグループ
+    # --------------------
+    # MariaDB
+    mariadb:
+      children:
+        rdb_all:
+      vars:
+        is_mariadb: true
+    # PostgreSQL
+    postgresql:
+      children:
+        rdb_all:
+      vars:
+        is_postgresql: true
+    # MongoDB
+    mongodb:
+      children:
+        ddb_all:
+      vars:
+        is_mongodb: true
+    # Redis
+    redis:
+      children:
+        cache_all:
+      vars:
+        is_redis: true
+    # Nginx
+    nginx:
+      children:
+        web_all:
+      vars:
+        is_nginx: true
+        is_rdb_client: true
+        is_ddb_client: true
+        is_cache_client: true
+    # Node.js
+    nodejs:
+      children:
+        nodejs_hosts:
+      vars:
+        is_nodejs: true
+    # Docker
+    docker:
+      children:
+        container_all:
+      vars:
+        is_docker: true
+    # Docker Swarm
+    docker_swarm:
+      children:
+        container_orchestration_all:
+      vars:
+        is_docker_swarm: true
+  vars:
+    # ========================================
+    # 変数
+    # ========================================
+    # --------------------
+    # 環境設定
+    # --------------------
+    # 対象インベントリ
+    target_inventory: "vagrant"
+    # 対象環境
+    target_env: "dev"
+    # --------------------
+    # ansible設定
+    # --------------------
+    become_super_user: root
+    # --------------------
+    # OS：基本設定
+    # --------------------
+    setup_os_base: true
+    #with_remi_repository: true
+    #with_epel_repository: true
+    #upgrade_all_packages: true
+    with_remi_repository: false
+    with_epel_repository: false
+    upgrade_all_packages: false
+    lang_package: langpacks-ja
+    os_locale: ja_JP.UTF-8
+    os_timezone: Asia/Tokyo
+    os_limit_nofile: 524288
+    # --------------------
+    # OS：ユーザー設定
+    # --------------------
+    setup_os_user: true
+    proj_user: test
+    proj_group: test
+    proj_groups: "{{ proj_group }}"
+    proj_user_home: "/home/{{ proj_user }}"
+    proj_user_shell: /bin/bash
+    proj_user_generate_ssh_key: true
+    proj_user_with_authorized_keys: true
+    proj_user_sudoer: true
+    proj_user_umask: "0002"
+    # --------------------
+    # パッケージ：RDB設定
+    # --------------------
+    setup_rdb: true
+    setup_rdb_server: true
+    setup_rdb_client: true
+    rdb_cluster: false
+    rdb_with_replica: false
+    # --------------------
+    # パッケージ：RDB：MariaDB設定
+    # --------------------
+    setup_mariadb: true
+    setup_mariadb_server: true
+    setup_mariadb_client: true
+    mariadb_root_user: root
+    mariadb_root_password: hogehoge
+    mariadb_admin_db: mysql
+    mariadb_admin_user: admin
+    mariadb_admin_password: hogehoge
+    mariadb_admin_accessable_host: 192.168.56.%
+    mariadb_character_set: utf8mb4
+    # --------------------
+    # パッケージ：RDB：PostgreSQL設定
+    # --------------------
+    setup_postgresql: true
+    setup_postgresql_server: true
+    setup_postgresql_client: true
+    postgresql_postgres_user: postgres
+    # postgresql_postgres_password: hogehoge
+    postgresql_admin_db: postgres
+    postgresql_admin_user: admin
+    postgresql_admin_password: hogehoge
+    # postgresql_admin_hashed_password: echo "md5$(echo -n $postgresql_admin_password$postgresql_admin_user | md5 | awk '{print $1}')"
+    postgresql_admin_hashed_password: md5861ff33bef7b81deeff2b2474733c888
+    postgresql_admin_accessable_host: 192.168.56.0/24
+    postgresql_encoding: UTF-8
+    # --------------------
+    # パッケージ：ドキュメントDB設定
+    # --------------------
+    setup_ddb: true
+    setup_ddb_server: true
+    setup_ddb_client: true
+    # --------------------
+    # パッケージ：ドキュメントDB：MongoDB設定
+    # --------------------
+    setup_mongodb: true
+    setup_mongodb_server: true
+    setup_mongodb_client: true
+    ddb_cluster: false
+    ddb_with_replica: false
+    # --------------------
+    # パッケージ：キャッシュ設定
+    # --------------------
+    setup_cache: true
+    setup_cache_server: true
+    setup_cache_client: true
+    # --------------------
+    # パッケージ：キャッシュ：redis設定
+    # --------------------
+    setup_redis: true
+    setup_redis_server: true
+    setup_redis_client: true
+    cache_cluster: false
+    cache_with_replica: false
+    # --------------------
+    # パッケージ：Webサーバー設定
+    # --------------------
+    setup_web_server: true
+    # --------------------
+    # パッケージ：Webサーバー：Nginx設定
+    # --------------------
+    setup_nginx_server: true
+    # --------------------
+    # パッケージ：Node.js設定
+    # --------------------
+    setup_nodejs: true
+    # --------------------
+    # パッケージ：コンテナ設定
+    # --------------------
+    setup_container: true
+    setup_container_server: true
+    setup_container_client: true
+    setup_container_orchestration: true
+    setup_container_orchestration_server: true
+    setup_container_orchestration_client: true
+    # --------------------
+    # パッケージ：コンテナ設定：Docker
+    # --------------------
+    setup_docker: true
+    setup_docker_server: true
+    setup_docker_client: true
+    setup_docker_swarm: true
+    setup_docker_swarm_server: true
+    setup_docker_swarm_client: true
+
+# ------------------------------------------------------------
+# EOF

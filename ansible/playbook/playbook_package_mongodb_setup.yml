@@ -1,0 +1,49 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_package_mongodb_setup.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Setup mongodb server
+  hosts: mongodb
+  tags: mongodb,mongodb_server
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_mongodb_server_setup
+      when: setup_ddb is defined
+        and setup_ddb
+        and setup_ddb_server is defined
+        and setup_ddb_server
+        and setup_mongodb is defined
+        and setup_mongodb
+        and setup_mongodb_server is defined
+        and setup_mongodb_server
+        and is_ddb_server is defined
+        and is_ddb_server
+        and is_mongodb is defined
+        and is_mongodb
+
+# ------------------------------------------------------------
+- name: Setup mongodb client
+  hosts: all
+  tags: mongodb,mongodb_client
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: package_mongodb_client_setup
+      when: setup_ddb is defined
+        and setup_ddb
+        and setup_ddb_client is defined
+        and setup_ddb_client
+        and setup_mongodb is defined
+        and setup_mongodb
+        and setup_mongodb_client is defined
+        and setup_mongodb_client
+        and is_ddb_client is defined
+        and is_ddb_client
+
+# ------------------------------------------------------------
+# EOF

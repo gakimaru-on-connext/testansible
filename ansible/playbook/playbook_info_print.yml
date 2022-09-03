@@ -1,0 +1,17 @@
+# ------------------------------------------------------------
+# ansible/playbook/playbook_info_print.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Print ansible information
+  hosts: all
+  tags: info
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/vars/common_vars.yml"
+  roles:
+    - role: info_inventory
+
+# ------------------------------------------------------------
+# EOF

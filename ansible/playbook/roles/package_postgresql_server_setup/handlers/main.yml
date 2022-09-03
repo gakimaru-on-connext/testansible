@@ -1,0 +1,10 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_postgresql_server_setup/handlers/main.yml
+
+---
+# ----------------------------------------------------------
+- name: Restart postgresql server
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/roles/package_postgresql_server_setup/tasks/restart_postgresql_server.yml"
+
+# ------------------------------------------------------------
+# EOF

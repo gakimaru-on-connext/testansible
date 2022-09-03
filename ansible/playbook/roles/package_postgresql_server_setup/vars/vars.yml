@@ -1,0 +1,12 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_postgresql_server_setup/vars/vars.yml
+
+---
+server_conf_path: /var/lib/pgsql/data/postgresql.conf
+pg_hba_path: /var/lib/pgsql/data/pg_hba.conf
+
+server_conf_path_v14: /var/lib/pgsql/14/data/postgresql.conf
+pg_hba_path_v14: /var/lib/pgsql/14/data/pg_hba.conf
+
+# ------------------------------------------------------------
+# EOF

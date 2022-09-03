@@ -1,0 +1,17 @@
+export  PATH=/usr/local/bin:$PATH
+export  LANG={{ os_locale }}
+export  LC_ALL={{ os_locale }}
+
+umask {{ proj_user_umask }}
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias ls='ls -F --color'
+alias la='ls -aF --color'
+alias ll='ls -lF --color'
+alias lla='ls -laF --color'
+alias lsd='ls -dF --color'
+alias lad='ls -adF --color'
+alias lld='ls -ldF --color'
+alias llad='ls -ladF --color'

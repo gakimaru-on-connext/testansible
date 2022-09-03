@@ -1,0 +1,8 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_mongodb_server_setup/vars/vars.yml
+
+---
+yum_repo_path_v60_redhat9: /etc/yum.repos.d/mongodb-org-6.0.repo
+
+# ------------------------------------------------------------
+# EOF

@@ -1,0 +1,38 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_mariadb_client_setup/tasks/main.yml
+
+---
+
+# ------------------------------------------------------------
+# Super user block
+- name: Setup mariadb client by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    # RedHat 9 type block
+    - name: Setup mariadb client on redhat9 by super user
+      when: ansible_distribution_file_variety == "RedHat"
+        and ansible_distribution_major_version == "9"
+      # ignore_errors: true
+      block:
+
+        # ------------------------------------------------------------
+        - name: Install mariadb client
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            # state: latest
+            state: present
+          with_items:
+            - mariadb
+
+        # ------------------------------------------------------------
+        # End of [RedHat 9 type block]
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# EOF

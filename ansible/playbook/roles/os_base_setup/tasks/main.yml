@@ -1,0 +1,154 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/os_base_setup/tasks/main.yml
+
+---
+
+- name: Include vars
+  ansible.builtin.include_vars: vars.yml
+
+# ------------------------------------------------------------
+# Super user block
+- name: Setup os base by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    # RedHat 9 type block
+    - name: Setup os base on redhat9 by super user
+      when: ansible_distribution_file_variety == "RedHat"
+        and ansible_distribution_major_version == "9"
+      # ignore_errors: true
+      block:
+
+        # ------------------------------------------------------------
+        - name: Add epel repository block
+          when: with_epel_repository is defined
+            and with_epel_repository
+          # ignore_errors: true
+          block:
+
+            # ------------------------------------------------------------
+            - name: Add epel repository
+              ansible.builtin.dnf:
+                name: epel-release
+                # state: latest
+                state: present
+                enablerepo: epel-release
+              # [NG]
+              # ansible.builtin.yum_repository:
+              #   name: epel-release
+              #   description: epel-release
+              #   enabled: true
+              # [参考]
+              # ansible.builtin.dnf:
+              #   name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+              #   state: present
+              #   enablerepo: epel-release
+              
+
+            # ------------------------------------------------------------
+            # End of [Add epel repository block]
+
+        # ------------------------------------------------------------
+        - name: Add remi repository block
+          when: with_remi_repository is defined
+            and with_remi_repository
+          # ignore_errors: true
+          block:
+
+            - name: Install rpm key for remi repository
+              ansible.builtin.rpm_key:
+                key: "{{ remi_repository_base_url }}/RPM-GPG-KEY-remi2021"
+                state: present
+
+            # ------------------------------------------------------------
+            - name: Add remi repository
+              ansible.builtin.dnf:
+                name: "{{ remi_repository_base_url }}/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm"
+                state: present
+                enablerepo: remi
+              # [NG]
+              # ansible.builtin.yum_repository:
+              #   name: remi
+              #   description: remi-release
+              #   baseurl: "{{ remi_repository_base_url }}/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm"
+              #   enabled: true
+
+            # ------------------------------------------------------------
+            # End of [Add remi repository block]
+
+        # ------------------------------------------------------------
+        - name: Upgrade all packages
+          ansible.builtin.dnf:
+            name: "*"
+            state: latest
+            # state: present
+          when: upgrade_all_packages is defined
+            and upgrade_all_packages
+
+        # ------------------------------------------------------------
+        - name: Install basic packages
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            # state: latest
+            state: present
+          with_items:
+            - expect
+
+        # ------------------------------------------------------------
+        - name: Install language packages
+          ansible.builtin.dnf:
+            name: "{{ lang_package }}"
+            # state: latest
+            state: present
+          when: lang_package is defined
+            and lang_package != ""
+
+        # ------------------------------------------------------------
+        # End of [RedHat 9 type block]
+
+    # ------------------------------------------------------------
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: "{{ host_name }}"
+      when: host_name is defined
+        and host_name != ""
+
+    # ------------------------------------------------------------
+    - name: Set locale
+      ansible.builtin.command: "localectl set-locale LANG={{ os_locale }}"
+      when: os_locale is defined
+        and os_locale != ""
+        # and lookup("ansible.builtin.env", "LANG") != (os_locale)
+      # [NG]
+      # community.general.locale_gen:
+      #   name: "{{ os_locale }}"
+      #   state: present
+
+    # ------------------------------------------------------------
+    - name: Set timezone
+      community.general.timezone:
+        name: "{{ os_timezone }}"
+      when: os_timezone is defined
+        and os_timezone != ""
+
+    # ------------------------------------------------------------
+    - name: Set pam limits
+      community.general.pam_limits:
+        domain: "{{ item.domain }}"
+        limit_type: "{{ item.limit_type }}"
+        limit_item: "{{ item.limit_item }}"
+        value: "{{ item.value }}"
+      with_items:
+        - domain: "*"
+          limit_type: "-"
+          limit_item: "nofile"
+          value: "{{ os_limit_nofile }}"
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# EOF

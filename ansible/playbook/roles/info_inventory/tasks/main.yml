@@ -1,0 +1,19 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/info.inventory/tasks/main.yml
+
+---
+
+# ------------------------------------------------------------
+- name: Print inventory information
+  ansible.builtin.debug:
+    # var: "{{ item }}"
+    msg: "var[{{ item }}]: {{ lookup('ansible.builtin.vars', item) }}"
+  with_items:
+    - target_inventory
+    - target_env
+    - ansible_distribution
+    - ansible_distribution_file_variety
+    - ansible_distribution_major_version
+
+# ------------------------------------------------------------
+# EOF

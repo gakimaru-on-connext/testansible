@@ -1,0 +1,128 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/os_user_setup/tasks/main.yml
+
+---
+
+# ------------------------------------------------------------
+# Super user block
+- name: Setup os user by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    - name: Create project group
+      ansible.builtin.group:
+        name: "{{ proj_group }}"
+
+    # ------------------------------------------------------------
+    - name: Create project user
+      ansible.builtin.user:
+        name: "{{ proj_user }}"
+        group: "{{ proj_group }}"
+        groups: "{{ proj_groups }}"
+        home: "{{ proj_user_home }}"
+        shell: "{{ proj_user_shell }}"
+        generate_ssh_key: "{{ proj_user_generate_ssh_key }}"
+        state: present
+
+    # ------------------------------------------------------------
+    - name: Create project user dir
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ proj_user }}"
+        group: "{{ proj_group }}"
+        mode: "0700"
+      with_items:
+        - "{{ proj_user_home }}/.ansible"
+        - "{{ proj_user_home }}/.ansible/tmp"
+        - "{{ proj_user_home }}/.cache"
+        - "{{ proj_user_home }}/.ssh"
+        - "{{ proj_user_home }}/.ssh/config.d"
+
+    # ----------------------------------------------------------
+    - name: Change project user owner
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ proj_user }}"
+        group: "{{ proj_group }}"
+        mode: "u+rwX,go-rwx"
+        recurse: true
+      with_items:
+        - "{{ proj_user_home }}/.ansible"
+        - "{{ proj_user_home }}/.cache"
+
+    # ------------------------------------------------------------
+    - name: Setup project user ssh config
+      ansible.builtin.lineinfile:
+        dest: "{{ proj_user_home }}/.ssh/config"
+        insertbefore: BOF
+        line: "Include config.d/*"
+        owner: "{{ proj_user }}"
+        group: "{{ proj_group }}"
+        mode: "0600"
+        create: true
+        state: present
+
+    # ------------------------------------------------------------
+    # AuthorizedKeys block
+    - name: Setup project user authorized keys
+      when: proj_user_with_authorized_keys is defined
+        and proj_user_with_authorized_keys
+      block:
+
+        # ------------------------------------------------------------
+        - name: Add authorized keys on project user
+          ansible.posix.authorized_key:
+            user: "{{ proj_user }}"
+            state: present
+            # exclusive: true
+            # key: "{{ lookup('ansible.builtin.pipe', 'cat {{ role_path }}/authorized_keys/add/*.pub') }}"
+            key: "{{ lookup('ansible.builtin.file', item) }}"
+          with_fileglob: "{{ role_path }}/authorized_keys/add/*.pub"
+
+        # ------------------------------------------------------------
+        - name: Delete authorized keys on project user
+          ansible.posix.authorized_key:
+            user: "{{ proj_user }}"
+            state: absent
+            # key: "{{ lookup('ansible.builtin.pipe', 'cat {{ role_path }}/authorized_keys/del/*.pub') }}"
+            key: "{{ lookup('ansible.builtin.file', item) }}"
+          with_fileglob: "{{ role_path }}/authorized_keys/del/*.pub"
+
+        # ------------------------------------------------------------
+        # End of [AuthorizedKeys block]
+
+    # ------------------------------------------------------------
+    - name: Add sudoers for project user
+      ansible.builtin.template:
+        src: sudoers-user.j2
+        dest: "/etc/sudoers.d/{{ proj_user }}"
+        mode: "0440"
+      when: proj_user_sudoer is defined
+        and proj_user_sudoer
+
+    # ------------------------------------------------------------
+    - name: Copy .bashrc.ext on project user
+      ansible.builtin.template:
+        src: ".bashrc.ext.j2"
+        dest: "{{ proj_user_home }}/.bashrc.ext"
+        owner: "{{ proj_user }}"
+        group: "{{ proj_group }}"
+        mode: "0440"
+
+    # ------------------------------------------------------------
+    - name: Setup .bashrc on project user
+      ansible.builtin.lineinfile:
+        dest: "{{ proj_user_home }}/.bashrc"
+        insertafter: EOF
+        line: "source ~/.bashrc.ext"
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# EOF

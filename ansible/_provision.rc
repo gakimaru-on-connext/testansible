@@ -1,0 +1,167 @@
+if [ "$(basename $0)" = "_provision.rc" ]; then
+    echo "シェルスクリプトから呼び出して下さい"
+    return 1
+fi
+
+source $CURDIR/_env.rc
+
+if [ -z ${TARGET_INVENTORY+x} ]; then
+    echo "環境変数 TARGET_INVENTORY が指定されていません"
+    exit 1
+fi
+
+if [ -z ${TARGET_SITE+x} ]; then
+    echo "環境変数 TARGET_SITE が指定されていません"
+    exit 1
+fi
+
+cd $PLAYBOOK_DIR
+
+INVENTORY_FILE=$INVENTORIES/${TARGET_INVENTORY}_hosts.yml
+SITE_FILE=site_${TARGET_SITE}.yml
+
+echo "----------------------------------------------------------------------"
+echo "[ $(basename $0) ]"
+
+# options
+for OPT in "$@"
+do
+    case $OPT in
+    $TARGET_ENV )
+        ;;
+    "-y" )
+        CONFIRM=y
+        ;;
+    -v* )
+        VERBOSE_OPT=$OPT
+        ;;
+    --tags=* )
+        TAGS_OPT=$OPT
+        ;;
+    "--check" )
+        echo "********** dry-run mode **********"
+        CHECK_OPT=$OPT
+        ;;
+    "--setup-inventories" )
+        SETUP_INVENTORIES=true
+        ;;
+    "--no-setup-inventories" )
+        SETUP_INVENTORIES=false
+        ;;
+    "--build-app" )
+        BUILD_APP=true
+        ;;
+    "--no-build-app" )
+        BUILD_APP=false
+        ;;
+    "--update-app" )
+        UPDATE_APP=true
+        ;;
+    "--no-update-app" )
+        UPDATE_APP=false
+        ;;
+    * )
+        echo "Unknown option:" $OPT
+        ;;
+    esac
+    shift
+done
+
+if [ "$CONFIRM" == "y" ]; then
+    if [ -z ${SETUP_INVENTORIES+x} ]; then
+        SETUP_INVENTORIES=true
+    fi
+    if [ -z ${BUILD_APP+x} ]; then
+        BUILD_APP=true
+    fi
+    if [ -z ${UPDATE_APP+x} ]; then
+        UPDATE_APP=true
+    fi
+fi
+
+if [ -z ${SETUP_INVENTORIES+x} ]; then
+    echo ""
+    echo -n "Ansibleのイベントリをセットアップしますか？(y/n [n]) "
+    read REQUIRED
+    SETUP_INVENTORIES=false
+    if [ "$REQUIRED" == "y" ]; then
+        SETUP_INVENTORIES=true
+    fi
+fi
+if [ -z ${BUILD_APP+x} ]; then
+    #echo ""
+    #echo -n "Appをビルドしますか？(y/n [n]) "
+    #read REQUIRED
+    BUILD_APP=false
+    #if [ "$REQUIRED" == "y" ]; then
+    #    BUILD_APP=true
+    #fi
+fi
+if [ -z ${UPDATE_APP+x} ]; then
+    #echo ""
+    #echo -n "Appを更新（デプロイ）しますか？(y/n [n]) "
+    #read REQUIRED
+    UPDATE_APP=false
+    #if [ "$REQUIRED" == "y" ]; then
+    #    UPDATE_APP=true
+    #fi
+fi
+
+#export SETUP_INVENTORIES
+#export BUILD_APP
+#export UPDATE_APP
+#export VERBOSE_OPT
+#export TAGS_OPT
+#export CHECK_OPT
+
+echo ""
+echo "----------------------------------------------------------------------"
+echo SETUP_INVENTORIES=$SETUP_INVENTORIES
+#echo BUILD_APP=$BUILD_APP
+#echo UPDATE_APP=$UPDATE_APP
+echo VERBOSE_OPT=$VERBOSE_OPT
+echo TAGS_OPT=$TAGS_OPT
+
+# extra-vars
+EXTRA_VARS=""
+EXTRA_VARS="$EXTRA_VARS update_app=$UPDATE_APP"
+#export EXTRA_VARS
+echo EXTRA_VARS="$EXTRA_VARS"
+
+# ansible option
+ANSIBLE_OPT="$VERBOSE_OPT $TAGS_OPT $CHECK_OPT"
+#export ANSIBLE_OPT
+
+if [ -z ${CONFIRM+x} ]; then
+    echo ""
+    echo "----------------------------------------------------------------------"
+    echo -n "プロビジョニングを開始してもよろしいですか？ (y/n [n]) "
+    read CONFIRM
+fi
+if [ "$CONFIRM" != "y" ]; then
+    echo ""
+    echo "- 中止しました -"
+    exit 0
+fi
+
+# Setup ansible inventories
+if [ "$SETUP_INVENTORIES" = "true" ]; then
+    echo ""
+    echo "----------------------------------------------------------------------"
+    echo "Setup ansible inventories"
+    bash $CURDIR/inventories-setup.sh
+    echo "done."
+fi
+
+# Build app
+if [ "$BUILD_APP" = "true" ]; then
+    echo ""
+    echo "----------------------------------------------------------------------"
+    echo "Build App"
+    # Appビルド処理
+    echo "done."
+fi
+
+echo ""
+echo "----------------------------------------------------------------------"
+echo "Provisioning by ansible"

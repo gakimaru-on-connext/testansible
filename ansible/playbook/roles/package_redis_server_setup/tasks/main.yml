@@ -1,0 +1,68 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_redis_server_setup/tasks/main.yml
+
+---
+
+- name: Include vars
+  ansible.builtin.include_vars: vars.yml
+
+# ------------------------------------------------------------
+# Super user block
+- name: Setup redis server by super user
+  become: true
+  become_user: "{{ become_super_user }}"
+  # ignore_errors: true
+  block:
+
+    # ------------------------------------------------------------
+    # RedHat 9 type on super user block
+    - name: Setup redis server on redhat9 by super user
+      when: ansible_distribution_file_variety == "RedHat"
+        and ansible_distribution_major_version == "9"
+      # ignore_errors: true
+      block:
+
+        # ------------------------------------------------------------
+        - name: Install redis server
+          ansible.builtin.dnf:
+            name: "{{ item }}"
+            # state: latest
+            state: present
+          with_items:
+            - redis
+
+        # ----------------------------------------------------------
+        - name: Start redis server
+          ansible.builtin.systemd:
+            name: redis
+            state: started
+            # daemon_reload: true
+            enabled: true
+
+        # ------------------------------------------------------------
+        - name: Setup firewalld for redis
+          ansible.posix.firewalld:
+            port: 6379/tcp
+            permanent: true
+            immediate: true
+            state: enabled
+
+        # ----------------------------------------------------------
+        - name: Setup bind
+          ansible.builtin.lineinfile:
+            dest: "{{ server_conf_path }}"
+            regexp: "^(bind) (127\\.0\\.0\\.1) (.*)$"
+            line: |
+              #\1 \2 \3
+              \1 * -::*
+            backrefs: true
+          notify: Restart redis server
+
+        # ------------------------------------------------------------
+        # End of [RedHat 9 type block]
+
+    # ------------------------------------------------------------
+    # End of [Super user block]
+
+# ------------------------------------------------------------
+# EOF

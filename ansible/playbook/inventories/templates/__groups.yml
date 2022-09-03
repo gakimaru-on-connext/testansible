@@ -1,0 +1,109 @@
+    # --------------------
+    # 役割別ホストグループ
+    # --------------------
+    # 全RDBサーバー
+    rdb_all:
+      children:
+        rdb_master_hosts:
+        rdb_slave_hosts:
+      vars:
+        is_rdb_server: true
+    # 全ドキュメントDBサーバー
+    ddb_all:
+      children:
+        ddb_master_hosts:
+        ddb_replica_hosts:
+      vars:
+        is_ddb_server: true
+    # 全DBサーバー
+    db_all:
+      children:
+        rdb_all:
+        ddb_all:
+      vars:
+        is_db_server: true
+    # 全キャッシュサーバー
+    cache_all:
+      children:
+        cache_master_hosts:
+        cache_replica_hosts:
+      vars:
+        is_cache_server: true
+    # 全Webフロントエンドサーバー
+    front_all:
+      children:
+        front_hosts:
+      vars:
+        is_front_server: true
+    # 全WebAPIサーバー
+    api_all:
+      children:
+        api_hosts:
+      vars:
+        is_api_server: true
+    # 全管理サーバー
+    admin_all:
+      children:
+        admin_hosts:
+      vars:
+        is_admin_server: true
+    # 全Webサーバー
+    web_all:
+      children:
+        front_all:
+        api_all:
+        admin_all:
+      vars:
+        is_web_server: true
+        is_rdb_client: true
+        is_ddb_client: true
+        is_cache_client: true
+    # 全ホスト
+    hosts_all:
+      children:
+        db_all:
+        cache_all:
+        web_all:
+        nodejs_all:
+    # --------------------
+    # パッケージ別ホストグループ
+    # --------------------
+    # MariaDB
+    mariadb:
+      children:
+        rdb_all:
+      vars:
+        is_mariadb: true
+    # PostgreSQL
+    postgresql:
+      children:
+        rdb_all:
+      vars:
+        is_postgresql: true
+    # MongoDB
+    mongodb:
+      children:
+        ddb_all:
+      vars:
+        is_mongodb: true
+    # Redis
+    redis:
+      children:
+        cache_all:
+      vars:
+        is_redis: true
+    # Nginx
+    nginx:
+      children:
+        web_all:
+      vars:
+        is_nginx: true
+        is_rdb_client: true
+        is_ddb_client: true
+        is_cache_client: true
+    # Node.js
+    nodejs:
+      children:
+        nodejs_hosts:
+      vars:
+        is_nodejs: true

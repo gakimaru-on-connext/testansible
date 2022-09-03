@@ -1,0 +1,11 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_mariadb_server_setup/handlers/main.yml
+
+---
+
+# ----------------------------------------------------------
+- name: Restart mariadb server
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/roles/package_mariadb_server_setup/tasks/restart_mariadb_server.yml"
+
+# ------------------------------------------------------------
+# EOF

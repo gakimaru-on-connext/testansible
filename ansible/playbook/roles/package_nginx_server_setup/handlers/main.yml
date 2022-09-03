@@ -1,0 +1,11 @@
+# ------------------------------------------------------------
+# ansible/playbook/roles/package_nginx_server_setup/handlers/main.yml
+
+---
+
+# ----------------------------------------------------------
+- name: Restart nginx server
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/roles/package_nginx_server_setup/tasks/restart_nginx_server.yml"
+
+# ------------------------------------------------------------
+# EOF
