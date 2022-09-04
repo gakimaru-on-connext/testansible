@@ -89,7 +89,7 @@
 <li><a href="#%E5%8B%95%E4%BD%9C%E8%A6%81%E4%BB%B6">■動作要件</a></li>
 <li><a href="#ansible-%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0%E6%BA%96%E5%82%99">■Ansible プロビジョニング準備</a></li>
 <li><a href="#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95">■VM 操作方法</a></li>
-<li><a href="#ansible-%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0">■Ansible プロビジョニング</a></li>
+<li><a href="#ansible-%E3%83%97%E3%83%AD%E3%83%93%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0%E5%AE%9F%E8%A1%8C">■Ansible プロビジョニング実行</a></li>
 <li><a href="#%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E5%86%85%E5%AE%B9">■セットアップ内容</a></li>
 <li><a href="#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95">■各サーバーへのアクセス方法</a></li>
 <li><a href="#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A">■解説： Vagrant 設定</a></li>
@@ -177,7 +177,7 @@
 <hr>
 <h2 id="vm-操作方法">■VM 操作方法</h2>
 <ul>
-<li><a href="https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95">testvagrant</a> と同様</li>
+<li><a href="https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95">testvagrant</a> 参照</li>
 </ul>
 <!-- omit in toc -->
 <h3 id="vm-ログイン">▼VM ログイン</h3>
@@ -189,7 +189,7 @@
 <li>ホスト名は、Vagrantfile の設定で host01, host02 を設定</li>
 </ul>
 <hr>
-<h2 id="ansible-プロビジョニング">■Ansible プロビジョニング</h2>
+<h2 id="ansible-プロビジョニング実行">■Ansible プロビジョニング実行</h2>
 <!-- omit in toc -->
 <h3 id="方法1-直接-ansible-playbook-コマンドを実行してプロビジョニング">▼[方法1] 直接 ansible-playbook コマンドを実行してプロビジョニング</h3>
 <pre><code class="language-shell"><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible/playbook</span>
@@ -255,7 +255,27 @@ SITE_FILE=site_${TARGET_SITE}.yml
 </div></code></pre>
 </li>
 <li>
-<p>注）この時、known_hosts の fingerprint 更新が行われるため、場合によっては ~/.ssh/known_hosts から 192.168.56.11 のエントリを削除する必要あり</p>
+<p>注）ansible 実行時に ssh 接続で known_hosts の fingerprint 確認が行われることに注意</p>
+<ul>
+<li>過去に　vagrant destroy で VM を破棄していると実行に失敗してしまう</li>
+<li>ansible/provision_vagrant.sh 内の下記の行を有効にすると、~/.ssh/known_hosts を強制的に書き換えて実行する
+<ul>
+<li>
+<p>ansible/provision_vagrant.sh</p>
+<pre><code class="language-shell"><div><span class="hljs-meta">#</span><span class="bash"> Vagrant 専用処理</span>
+<span class="hljs-meta">#</span><span class="bash"> 注）~/.ssh/known_hosts を強制的に書き換えるので注意</span>
+<span class="hljs-meta">#</span><span class="bash">force_update_known_hosts 192.168.56.11 testansible</span>
+</div></code></pre>
+<p>↓</p>
+<pre><code class="language-shell"><div><span class="hljs-meta">#</span><span class="bash"> Vagrant 専用処理</span>
+<span class="hljs-meta">#</span><span class="bash"> 注）~/.ssh/known_hosts を強制的に書き換えるので注意</span>
+<span class="hljs-meta">#</span><span class="bash"> ↓のコメントを解除</span>
+force_update_known_hosts 192.168.56.11 testansible
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </li>
@@ -269,16 +289,16 @@ SITE_FILE=site_${TARGET_SITE}.yml
 <h2 id="各サーバーへのアクセス方法">■各サーバーへのアクセス方法</h2>
 <ul>
 <li>
-<p><a href="https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95">testvagrant</a> と同様</p>
+<p><a href="https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95">testvagrant</a> 参照</p>
 </li>
 <li>
-<p>※ただし、アクセス先のアドレスは 192.168.56.10 から 192.168.56.11 に変更する</p>
+<p>アクセス先のアドレスは 192.168.56.10 から 192.168.56.11 に変更する必要あり</p>
 </li>
 </ul>
 <hr>
 <h2 id="解説-vagrant-設定">■解説： Vagrant 設定</h2>
 <ul>
-<li><a href="https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A">testvagrant</a> と同様</li>
+<li><a href="https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A">testvagrant</a> 参照</li>
 </ul>
 <hr>
 <h2 id="解説プロビジョニング">■解説：プロビジョニング</h2>
@@ -529,7 +549,33 @@ config.vm.define <span class="hljs-string">&quot;host02&quot;</span> <span class
 <span class="hljs-meta">$</span><span class="bash"> vagrant up --no-provision</span>
 </div></code></pre>
 <!-- omit in toc -->
-<h3 id="手順6-プロビジョニング">▼[手順6] プロビジョニング</h3>
+<h3 id="手順6-known_hosts-対策">▼[手順6] known_hosts 対策</h3>
+<ul>
+<li>
+<p>過去に複数 VM の vagrant destroy を行ったことがある場合、プロビジョニングに失敗するため、下記のファイルを更新して known_hosts を強制的に更新するように指定する</p>
+<ul>
+<li>
+<p>ansible/provision_vagrant.sh</p>
+<pre><code class="language-shell"><div><span class="hljs-meta">#</span><span class="bash"> Vagrant 専用処理</span>
+<span class="hljs-meta">#</span><span class="bash"> 注）~/.ssh/known_hosts を強制的に書き換えるので注意</span>
+<span class="hljs-meta">#</span><span class="bash">force_update_known_hosts 192.168.56.11 testansible</span>
+<span class="hljs-meta">#</span><span class="bash">force_update_known_hosts 192.168.56.11 testansible01</span>
+<span class="hljs-meta">#</span><span class="bash">force_update_known_hosts 192.168.56.12 testansible02</span>
+</div></code></pre>
+<p>↓</p>
+<pre><code class="language-shell"><div><span class="hljs-meta">#</span><span class="bash"> Vagrant 専用処理</span>
+<span class="hljs-meta">#</span><span class="bash"> 注）~/.ssh/known_hosts を強制的に書き換えるので注意</span>
+<span class="hljs-meta">#</span><span class="bash">force_update_known_hosts 192.168.56.11 testansible</span>
+<span class="hljs-meta">#</span><span class="bash"> ↓のコメントを解除</span>
+force_update_known_hosts 192.168.56.11 testansible01
+force_update_known_hosts 192.168.56.12 testansible02
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<!-- omit in toc -->
+<h3 id="手順7-プロビジョニング">▼[手順7] プロビジョニング</h3>
 <pre><code class="language-shell"><div><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> ansible</span>
 <span class="hljs-meta">$</span><span class="bash"> bash provision_vagrant.sh</span>
 </div></code></pre>

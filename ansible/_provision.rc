@@ -165,3 +165,14 @@ fi
 echo ""
 echo "----------------------------------------------------------------------"
 echo "Provisioning by ansible"
+
+function force_update_known_hosts() {
+    HOST_NAME=$1
+    VM_NAME=$2
+    KNOWN_HOSTS=~/.ssh/known_hosts
+    if [ -n "$HOST_NAME" -a -n "$VM_NAME" -a -f $KNOWN_HOSTS ]; then
+        echo "Update known_hosts for $HOST_NAME (VM:$VM_NAME)"
+        sed -i -e "/^$HOST_NAME/d" $KNOWN_HOSTS
+        ssh vagrant@$HOST_NAME -i "$VAGRANT_DIR/.vagrant/machines/$VM_NAME/virtualbox/private_key" -o StrictHostKeyChecking=no echo ok > /dev/null 2>&1
+    fi
+}

@@ -8,7 +8,7 @@
 - [■動作要件](#動作要件)
 - [■Ansible プロビジョニング準備](#ansible-プロビジョニング準備)
 - [■VM 操作方法](#vm-操作方法)
-- [■Ansible プロビジョニング](#ansible-プロビジョニング)
+- [■Ansible プロビジョニング実行](#ansible-プロビジョニング実行)
 - [■セットアップ内容](#セットアップ内容)
 - [■各サーバーへのアクセス方法](#各サーバーへのアクセス方法)
 - [■解説： Vagrant 設定](#解説-vagrant-設定)
@@ -110,7 +110,7 @@ $ bash ansible_lint.sh
 ---
 ## ■VM 操作方法
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) と同様
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) 参照
 
 <!-- omit in toc -->
 ### ▼VM ログイン
@@ -124,7 +124,7 @@ $ vagrant ssh (ホスト名)
 - ホスト名は、Vagrantfile の設定で host01, host02 を設定
 
 ---
-## ■Ansible プロビジョニング
+## ■Ansible プロビジョニング実行
 
 <!-- omit in toc -->
 ### ▼[方法1] 直接 ansible-playbook コマンドを実行してプロビジョニング
@@ -195,7 +195,25 @@ $ bash provision_vagrant.sh
     ...
     ```
 
-  - 注）この時、known_hosts の fingerprint 更新が行われるため、場合によっては ~/.ssh/known_hosts から 192.168.56.11 のエントリを削除する必要あり
+  - 注）ansible 実行時に ssh 接続で known_hosts の fingerprint 確認が行われることに注意
+    - 過去に　vagrant destroy で VM を破棄していると実行に失敗してしまう
+    - ansible/provision_vagrant.sh 内の下記の行を有効にすると、~/.ssh/known_hosts を強制的に書き換えて実行する
+      - ansible/provision_vagrant.sh
+
+        ```shell
+        # Vagrant 専用処理
+        # 注）~/.ssh/known_hosts を強制的に書き換えるので注意
+        #force_update_known_hosts 192.168.56.11 testansible
+        ```
+
+        ↓
+
+        ```shell
+        # Vagrant 専用処理
+        # 注）~/.ssh/known_hosts を強制的に書き換えるので注意
+        # ↓のコメントを解除
+        force_update_known_hosts 192.168.56.11 testansible
+        ```
 
 ---
 ## ■セットアップ内容
@@ -205,14 +223,14 @@ $ bash provision_vagrant.sh
 ---
 ## ■各サーバーへのアクセス方法
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95) と同様
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95) 参照
 
-- ※ただし、アクセス先のアドレスは 192.168.56.10 から 192.168.56.11 に変更する
+- アクセス先のアドレスは 192.168.56.10 から 192.168.56.11 に変更する必要あり
 
 ---
 ## ■解説： Vagrant 設定
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A) と同様
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A) 参照
 
 ---
 ## ■解説：プロビジョニング
@@ -451,7 +469,33 @@ $ vagrant up --no-provision
 ```
 
 <!-- omit in toc -->
-### ▼[手順6] プロビジョニング
+### ▼[手順6] known_hosts 対策
+
+- 過去に複数 VM の vagrant destroy を行ったことがある場合、プロビジョニングに失敗するため、下記のファイルを更新して known_hosts を強制的に更新するように指定する
+
+  - ansible/provision_vagrant.sh
+
+    ```shell
+    # Vagrant 専用処理
+    # 注）~/.ssh/known_hosts を強制的に書き換えるので注意
+    #force_update_known_hosts 192.168.56.11 testansible
+    #force_update_known_hosts 192.168.56.11 testansible01
+    #force_update_known_hosts 192.168.56.12 testansible02
+    ```
+
+    ↓
+
+    ```shell
+    # Vagrant 専用処理
+    # 注）~/.ssh/known_hosts を強制的に書き換えるので注意
+    #force_update_known_hosts 192.168.56.11 testansible
+    # ↓のコメントを解除
+    force_update_known_hosts 192.168.56.11 testansible01
+    force_update_known_hosts 192.168.56.12 testansible02
+    ```
+
+<!-- omit in toc -->
+### ▼[手順7] プロビジョニング
 
 ```shell
 $ cd ansible
