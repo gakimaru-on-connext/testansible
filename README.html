@@ -554,7 +554,7 @@ SITE_FILE=site_${TARGET_SITE}.yml
 <li>ansible/playbook/inventories/ 以下では、環境別の設定と共通設定を分けて templates/ にインベントリの元データを定義
 <ul>
 <li>templates/_*_hosts.yml が環境別の設定</li>
-<li>templates/fixed/__*.yml が共通設定</li>
+<li>templates/common/__*.yml が共通設定</li>
 </ul>
 </li>
 <li>ansible/inventories_setup.sh を実行すると、環境別の設定と共通設定を合成して、inventories/*_hosts.yml を出力する

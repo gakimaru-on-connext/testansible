@@ -206,7 +206,7 @@ $ bash provision_vagrant.sh
 - 複数の環境向けのインベントリを用意することを考慮（vagrant専用としない）
   - ansible/playbook/inventories/ 以下では、環境別の設定と共通設定を分けて templates/ にインベントリの元データを定義
     - templates/_\*_hosts.yml が環境別の設定
-    - templates/fixed/__\*.yml が共通設定
+    - templates/common/__\*.yml が共通設定
   - ansible/inventories_setup.sh を実行すると、環境別の設定と共通設定を合成して、inventories/\*_hosts.yml を出力する
     - ansible/inventories_verify.sh を実行すると、インベントリのエラーチェックおよび内容確認が可能
 - プレイブックは roles と site で構成
