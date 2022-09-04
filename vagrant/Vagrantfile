@@ -12,76 +12,14 @@ end
 #install_plugin('vagrant-vbox-snapshot')
 #install_plugin('vagrant-reload')
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  #config.vm.box = "base"
+  # dfault host
   config.vm.box = "generic/rocky9"
-
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # NOTE: This will enable public access to the opened port
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine and only allow access
-  # via 127.0.0.1 to disable public access
-  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-  #config.vm.network "forwarded_port", guest: 80, host: 40080 # http
-  #config.vm.network "forwarded_port", guest: 443, host: 40443 # https
-  #config.vm.network "forwarded_port", guest: 6379, host: 46379, host_ip: "127.0.0.1", auto_correct: true # redis
-  #config.vm.network "forwarded_port", guest: 3306, host: 43306, host_ip: "127.0.0.1", auto_correct: true # mysql/mariadb
-  #config.vm.network "forwarded_port", guest: 5432, host: 45432, host_ip: "127.0.0.1", auto_correct: true # postgresql
-  #config.vm.network "forwarded_port", guest: 27017, host: 47017, host_ip: "127.0.0.1", auto_correct: true # mongdb
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.network "private_network", ip: "192.168.56.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "./data", "/vagrant_data"
-  #config.vm.synced_folder "./share", "/vagrant/share"
-  #config.vm.synced_folder "/System/Volumes/Data" + File.expand_path("./share"), "/vagrant/share", type: "nfs", nfs_export: true, nfs_udp: false, nfs_version: 3
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
+  config.vm.network "private_network", ip: "192.168.56.11"
+  #config.vm.network "forwarded_port", guest: 80, host: 41080 # http
   config.vm.provider :virtualbox do |vb|
-    vb.name = "testansible"
+    vb.name = "testansible01"
     vb.gui = false
     vb.memory = "2048"
     vb.cpus = 2
@@ -89,13 +27,126 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
+  ## host01
+  #config.vm.define "host01" do |host01|
+  #  host01.vm.box = "generic/rocky9"
+  #  host01.vm.network "private_network", ip: "192.168.56.11"
+  #  #host01.vm.network "forwarded_port", guest: 80, host: 41080 # http
+  #  host01.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible01"
+  #    vb.gui = false
+  #    vb.memory = "2048"
+  #    vb.cpus = 2
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  # host02
+  #config.vm.define "host02" do |host02|
+  #  host02.vm.box = "generic/rocky9"
+  #  host02.vm.network "private_network", ip: "192.168.56.12"
+  #  #host02.vm.network "forwarded_port", guest: 80, host: 42080 # http
+  #  host02.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible02"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  ## host03
+  #config.vm.define "host03" do |host03|
+  #  host03.vm.box = "generic/rocky9"
+  #  host03.vm.network "private_network", ip: "192.168.56.13"
+  #  #host03.vm.network "forwarded_port", guest: 80, host: 43080 # http
+  #  host03.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible03"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  ## host04
+  #config.vm.define "host04" do |host04|
+  #  host04.vm.box = "generic/rocky9"
+  #  host04.vm.network "private_network", ip: "192.168.56.14"
+  #  #host04.vm.network "forwarded_port", guest: 80, host: 44080 # http
+  #  host04.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible04"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  ## host05
+  #config.vm.define "host05" do |host05|
+  #  host05.vm.box = "generic/rocky9"
+  #  host05.vm.network "private_network", ip: "192.168.56.15"
+  #  #host05.vm.network "forwarded_port", guest: 80, host: 45080 # http
+  #  host05.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible05"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  ## host06
+  #config.vm.define "host06" do |host06|
+  #  host06.vm.box = "generic/rocky9"
+  #  host06.vm.network "private_network", ip: "192.168.56.16"
+  #  #host06.vm.network "forwarded_port", guest: 80, host: 46080 # http
+  #  host06.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible06"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  ## host07
+  #config.vm.define "host07" do |host07|
+  #  host07.vm.box = "generic/rocky9"
+  #  host07.vm.network "private_network", ip: "192.168.56.17"
+  #  #host07.vm.network "forwarded_port", guest: 80, host: 47080 # http
+  #  host07.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible07"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
+  ## host08
+  #config.vm.define "host08" do |host08|
+  #  host08.vm.box = "generic/rocky9"
+  #  host08.vm.network "private_network", ip: "192.168.56.18"
+  #  #host08.vm.network "forwarded_port", guest: 80, host: 48080 # http
+  #  host08.vm.provider :virtualbox do |vb|
+  #    vb.name = "testansible08"
+  #    vb.gui = false
+  #    vb.memory = "1024"
+  #    vb.cpus = 1
+  #    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #  end
+  #end
+
   config.vm.provision :ansible do |ansible|
     playbook_dir = "../ansible/playbook"
     ansible.config_file = playbook_dir + "/ansible.cfg"

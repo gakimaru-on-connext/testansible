@@ -1,13 +1,27 @@
+<!-- omit in toc -->
 # Ansible Test
 
+[https://github.com/gakimaru-on-connext/testansible](https://github.com/gakimaru-on-connext/testansible)
 
-https://github.com/gakimaru-on-connext/testansible
+---
+- [■概要](#概要)
+- [■動作要件](#動作要件)
+- [■Ansible プロビジョニング準備](#ansible-プロビジョニング準備)
+- [■VM 操作方法](#vm-操作方法)
+- [■Ansible プロビジョニング](#ansible-プロビジョニング)
+- [■セットアップ内容](#セットアップ内容)
+- [■各サーバーへのアクセス方法](#各サーバーへのアクセス方法)
+- [■解説： Vagrant 設定](#解説-vagrant-設定)
+- [■解説：プロビジョニング](#解説プロビジョニング)
+- [■解説：複数 VM の起動とプロビジョニング](#解説複数-vm-の起動とプロビジョニング)
+- [■ディレクトリ構成](#ディレクトリ構成)
 
 ---
 ## ■概要
 
 - Vagrant を用いた VM 上へのOSセットアップのテスト
 - Ansible によるセットアップを行う
+  - 本場環境のプロビジョニングを想定して、複数の VM に対する同時セットアップを構成
 - シェル（スクリプト）によるセットアップと比較できるように、同様の内容の Ansible 版も用意
   - [https://github.com/gakimaru-on-connext/testvagrant](https://github.com/gakimaru-on-connext/testvagrant)
 
@@ -41,6 +55,7 @@ https://github.com/gakimaru-on-connext/testansible
 ---
 ## ■Ansible プロビジョニング準備
 
+<!-- omit in toc -->
 ### ▼インベントリファイルを生成
 
 ```shell
@@ -48,6 +63,7 @@ $ cd ansible
 $ bash inventories_setup.sh
 ```
 
+<!-- omit in toc -->
 ### ▼インベントリファイルを検証
 
 ```shell
@@ -55,6 +71,7 @@ $ cd ansible
 $ bash inventories_verify.sh
 ```
 
+<!-- omit in toc -->
 ### ▼インベントリファイルの内容確認
 
 ```shell
@@ -80,6 +97,7 @@ $ bash inventories_verify.sh --yaml
 $ bash inventories_verify.sh --list -vvv
 ```
 
+<!-- omit in toc -->
 ### ▼Playbook の内容・書き方エラーチェック
 
 ```shell
@@ -92,11 +110,23 @@ $ bash ansible_lint.sh
 ---
 ## ■VM 操作方法
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) 参照
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) と同様
+
+<!-- omit in toc -->
+### ▼VM ログイン
+
+```shell
+$ cd vagrant
+$ vagrant ssh (ホスト名)
+```
+
+- 複数ホストを扱うように構成しているため、ログインの際にはホスト名を指定する必要がある
+- ホスト名は、Vagrantfile の設定で host01, host02 を設定
 
 ---
 ## ■Ansible プロビジョニング
 
+<!-- omit in toc -->
 ### ▼[方法1] 直接 ansible-playbook コマンドを実行してプロビジョニング
 
 ```shell
@@ -104,6 +134,7 @@ $ cd ansible/playbook
 $ ansible-playbook -i inventories/vagrant_hosts.yml site_all_setup.yml
 ```
 
+<!-- omit in toc -->
 ### ▼[方法2] vagrant から ansible-playbook コマンドを実行してプロビジョニング
 
 ```shell
@@ -128,6 +159,7 @@ $ vagrant provision
     end
     ```
 
+<!-- omit in toc -->
 ### ▼[方法3] シェルスクリプトから ansible-playbook コマンドを実行してプロビジョニング
 
 ```shell
@@ -163,6 +195,8 @@ $ bash provision_vagrant.sh
     ...
     ```
 
+  - 注）この時、known_hosts の fingerprint 更新が行われるため、場合によっては ~/.ssh/known_hosts から 192.168.56.11 のエントリを削除する必要あり
+
 ---
 ## ■セットアップ内容
 
@@ -171,16 +205,19 @@ $ bash provision_vagrant.sh
 ---
 ## ■各サーバーへのアクセス方法
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95) と同じ
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95) と同様
+
+- ※ただし、アクセス先のアドレスは 192.168.56.10 から 192.168.56.11 に変更する
 
 ---
-## ■Vagrant 解説
+## ■解説： Vagrant 設定
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vagrant-%E8%A7%A3%E8%AA%AC) と同じ
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A) と同様
 
 ---
-## ■プロビジョニング解説
+## ■解説：プロビジョニング
 
+<!-- omit in toc -->
 ### ▼Vagrant プロビジョニング設定
 
 - Vagrantfile
@@ -198,6 +235,7 @@ $ bash provision_vagrant.sh
   end
   ```
 
+<!-- omit in toc -->
 ### ▼Ansible の使い方の特徴
 
 - インベントリファイルは、一般的な ini 形式ではなく yml 形式を採用
@@ -214,6 +252,211 @@ $ bash provision_vagrant.sh
 - ansible-lint の標準規則に従った内容で構成
   - ansible/ansible_list.sh を実行すると、プレイブックのエラーチェックが可能
   - ansible/playbook/.ansible-lint にて、無視するエラーを設定
+
+---
+## ■解説：複数 VM の起動とプロビジョニング
+
+<!-- omit in toc -->
+### ▼[手順１] Vagrant を停止して VM を破棄
+
+- Vagrantfile の設定を変更する前に、必ず VM の停止と破棄を行う
+
+  ```shell
+  $ cd vagrant
+  $ vagrant halt
+  ==> default: Attempting graceful shutdown of VM...
+  $ vagrant destroy
+      default: Are you sure you want to destroy the 'default' VM? [y/N] y
+  ==> default: Destroying VM and associated drives...
+  ```
+
+<!-- omit in toc -->
+### ▼[手順2] Vagrant の複数VM指定
+
+- Vagrantfile を編集し、config.vm.define "(ホスト名)" 〜 end を有効にする 
+
+  ```ruby
+  # dfault host
+  config.vm.box = "generic/rocky9"
+  config.vm.network "private_network", ip: "192.168.56.11"
+  #config.vm.network "forwarded_port", guest: 80, host: 41080 # http
+  config.vm.provider :virtualbox do |vb|
+    vb.name = "testansible01"
+    vb.gui = false
+    vb.memory = "2048"
+    vb.cpus = 2
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  end
+
+  ## host01
+  #config.vm.define "host01" do |host01|
+  #  host01.vm.box = "generic/rocky9"
+  #  host01.vm.network "private_network", ip: "192.168.56.11"
+  #  ...
+  #end
+
+  ## host02
+  #config.vm.define "host02" do |host02|
+  #  host02.vm.box = "generic/rocky9"
+  #  host02.vm.network "private_network", ip: "192.168.56.12"
+  #  ...
+  #end
+  ```
+
+  ↓
+
+  ```ruby
+  # ↓をコメントアウト
+  ## dfault host
+  #config.vm.box = "generic/rocky9"
+  #config.vm.network "private_network", ip: "192.168.56.11"
+  ##config.vm.network "forwarded_port", guest: 80, host: 41080 # http
+  #config.vm.provider :virtualbox do |vb|
+  #  vb.name = "testansible01"
+  #  vb.gui = false
+  #  vb.memory = "2048"
+  #  vb.cpus = 2
+  #  vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  #  vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #end
+
+  # ↓のコメントを解除
+  # host01
+  config.vm.define "host01" do |host01|
+    host01.vm.box = "generic/rocky9"
+    host01.vm.network "private_network", ip: "192.168.56.11"
+    ...
+  end
+
+  # ↓のコメントを解除
+  # host02
+  config.vm.define "host02" do |host02|
+    host01.vm.box = "generic/rocky9"
+    host01.vm.network "private_network", ip: "192.168.56.12"
+    ...
+  end
+  ```
+
+- Vagrantfile には複数 VM 設定をコメントアウトしているので、それを有効にする
+- 注）サンプルではクラスター構成を示しているが、実際にパッケージのセットアップではクラスター構成にはしていない
+
+<!-- omit in toc -->
+### ▼[手順3] Vagrant のプロビジョニングを無効化
+
+- Vagrantfile を編集し、config.vm.provision 〜 end を有効にする 
+
+  ```ruby
+  config.vm.provision :ansible do |ansible|
+    playbook_dir = "../ansible/playbook"
+    ansible.config_file = playbook_dir + "/ansible.cfg"
+    ansible.playbook = playbook_dir + "/site_all_setup.yml"
+    ansible.inventory_path = playbook_dir + "/inventories/vagrant_hosts.yml"
+    ansible.limit = 'all'
+    #ansible.verbose = "vvv"
+    #ansible.tags = "tag1,tag2,..."
+    #ansible.tags = "os,mariadb"
+  end
+  ```
+
+  ↓
+
+  ```ruby
+  #config.vm.provision :ansible do |ansible|
+  #  playbook_dir = "../ansible/playbook"
+  #  ansible.config_file = playbook_dir + "/ansible.cfg"
+  #  ansible.playbook = playbook_dir + "/site_all_setup.yml"
+  #  ansible.inventory_path = playbook_dir + "/inventories/vagrant_hosts.yml"
+  #  ansible.limit = 'all'
+  #  #ansible.verbose = "vvv"
+  #  #ansible.tags = "tag1,tag2,..."
+  #  #ansible.tags = "os,mariadb"
+  #end
+  ```
+
+  - vagrant では、VM を１台セットアップするごとにプロビジョニングを実行してしまう
+  - Ansible で全マシンをまとめてセットアップするため、vagrant によるプロビジョニングを無効化して扱う
+  - 編集後、インベントリの更新を実行
+  
+    ```shell
+    $ cd ansible
+    $ bash inventories_setup.sh
+    ```
+
+<!-- omit in toc -->
+### ▼[手順4] インベントリの設定を変更し、複数ホストに対応
+
+- ansible/inventories/template_/_vagrant_hosts.yml
+
+  ```yaml
+    # --------------------
+    # ホスト（物理）
+    # --------------------
+    # ホスト01
+    host_01:
+      hosts:
+        192.168.56.11:
+          host_name: testansible01
+          ansible_host: 192.168.56.11
+          ansible_port: 22
+          ansible_user: vagrant
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+          # ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host01/virtualbox/private_key"
+    # ホスト02
+    host_02:
+      hosts:
+        # 192.168.56.12:
+        #   host_name: testansible02
+        #   ansible_host: 192.168.56.12
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host02/virtualbox/private_key"
+  ```
+
+  ↓
+
+  ```yaml
+    # --------------------
+    # ホスト（物理）
+    # --------------------
+    # ホスト01
+    host_01:
+      hosts:
+        192.168.56.11:
+          host_name: testansible01
+          ansible_host: 192.168.56.11
+          ansible_port: 22
+          ansible_user: vagrant
+          # ↓のコメント行を変更
+          # ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host01/virtualbox/private_key"
+    # ↓のコメントを解除
+    # ホスト02
+    host_02:
+      hosts:
+        192.168.56.12:
+          host_name: testansible02
+          ansible_host: 192.168.56.12
+          ansible_port: 22
+          ansible_user: vagrant
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host02/virtualbox/private_key"
+  ```
+
+<!-- omit in toc -->
+### ▼[手順5] VM を起動
+
+```shell
+$ cd vagrant
+$ vagrant up --no-provision
+```
+
+<!-- omit in toc -->
+### ▼[手順6] プロビジョニング
+
+```shell
+$ cd ansible
+$ bash provision_vagrant.sh
+```
 
 ---
 ## ■ディレクトリ構成
@@ -332,7 +575,7 @@ testansible/
 │   ├── ansible_lint_result.txt                   ... Ansible-lint 実行結果
 │   ├── inventories_setup.sh                      ... Ansible インベントリセットアップスクリプト
 │   ├── inventories_verify.sh                     ... Ansible インベントリ検証スクリプト
-│   └── provision_vagrant.sh                      ... Ansible 実行スクリプト
+│   └── provision_(環境名).sh                      ... Ansible 実行スクリプト
 └── vagrant/                                      ... vagrant 用
     ├── share/                                    ... vagrant 共有ディレクトリ
     └── Vagrantfile                               ... vagrant VM 設定

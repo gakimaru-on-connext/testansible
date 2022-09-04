@@ -10,75 +10,76 @@ all:
     # ホスト01
     host_01:
       hosts:
-        192.168.56.10:
-          host_name: testansible
-          ansible_host: 192.168.56.10
+        192.168.56.11:
+          host_name: testansible01
+          ansible_host: 192.168.56.11
           ansible_port: 22
           ansible_user: vagrant
           ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+          # ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host01/virtualbox/private_key"
     # ホスト02
     host_02:
       hosts:
-        # 192.168.56.11:
-        #   host_name: testansible02
-        #   ansible_host: 192.168.56.11
-        #   ansible_port: 22
-        #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
-    # ホスト03
-    host_03:
-      hosts:
         # 192.168.56.12:
-        #   host_name: testansible03
+        #   host_name: testansible02
         #   ansible_host: 192.168.56.12
         #   ansible_port: 22
         #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
-    # ホスト04
-    host_04:
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host02/virtualbox/private_key"
+    # ホスト03
+    host_03:
       hosts:
         # 192.168.56.13:
-        #   host_name: testansible04
+        #   host_name: testansible03
         #   ansible_host: 192.168.56.13
         #   ansible_port: 22
         #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
-    # ホスト05
-    host_05:
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host03/virtualbox/private_key"
+    # ホスト04
+    host_04:
       hosts:
         # 192.168.56.14:
-        #   host_name: testansible05
+        #   host_name: testansible04
         #   ansible_host: 192.168.56.14
         #   ansible_port: 22
         #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
-    # ホスト06
-    host_06:
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host04/virtualbox/private_key"
+    # ホスト05
+    host_05:
       hosts:
         # 192.168.56.15:
-        #   host_name: testansible06
+        #   host_name: testansible05
         #   ansible_host: 192.168.56.15
         #   ansible_port: 22
         #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
-    # ホスト07
-    host_07:
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host05/virtualbox/private_key"
+    # ホスト06
+    host_06:
       hosts:
         # 192.168.56.16:
-        #   host_name: testansible07
+        #   host_name: testansible06
         #   ansible_host: 192.168.56.16
         #   ansible_port: 22
         #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
-    # ホスト08
-    host_08:
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host06/virtualbox/private_key"
+    # ホスト07
+    host_07:
       hosts:
         # 192.168.56.17:
-        #   host_name: testansible08
+        #   host_name: testansible07
         #   ansible_host: 192.168.56.17
         #   ansible_port: 22
         #   ansible_user: vagrant
-        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/default/virtualbox/private_key"
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host07/virtualbox/private_key"
+    # ホスト08
+    host_08:
+      hosts:
+        # 192.168.56.18:
+        #   host_name: testansible08
+        #   ansible_host: 192.168.56.18
+        #   ansible_port: 22
+        #   ansible_user: vagrant
+        #   ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/.vagrant/machines/host08/virtualbox/private_key"
     # --------------------
     # 基本ホストグループ
     # --------------------
