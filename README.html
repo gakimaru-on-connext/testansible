@@ -553,18 +553,18 @@ SITE_FILE=site_${TARGET_SITE}.yml
 <ul>
 <li>ansible/playbook/inventories/ 以下では、環境別の設定と共通設定を分けて templates/ にインベントリの元データを定義
 <ul>
-<li>templates/_*_hosts.yml が環境別の設定</li>
+<li>templates/_(環境名)_hosts.yml が環境別の設定</li>
 <li>templates/common/__*.yml が共通設定</li>
 </ul>
 </li>
-<li>ansible/inventories_setup.sh を実行すると、環境別の設定と共通設定を合成して、inventories/*_hosts.yml を出力する
+<li>ansible/inventories_setup.sh を実行すると、環境別の設定と共通設定を合成して、inventories/(環境名)_hosts.yml を出力する
 <ul>
 <li>ansible/inventories_verify.sh を実行すると、インベントリのエラーチェックおよび内容確認が可能</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>プレイブックは roles と site で構成
+<li>プレイブックは個別にロール（roles）で構成し、サイトファイルでまとめて実行するスタイル
 <ul>
 <li>サーバーの役割ごとのプレイブックをまとめやすいため</li>
 </ul>
