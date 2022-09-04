@@ -1,112 +1,110 @@
 # Ansible Test
 
-## リポジトリ
 
-- https://github.com/gakimaru-on-connext/testansible
+https://github.com/gakimaru-on-connext/testansible
 
-## 概要
+---
+## ■概要
 
 - Vagrant を用いた VM 上へのOSセットアップのテスト
 - Ansible によるセットアップを行う
+- シェル（スクリプト）によるセットアップと比較できるように、同様の内容の Ansible 版も用意
+  - [https://github.com/gakimaru-on-connext/testvagrant](https://github.com/gakimaru-on-connext/testvagrant)
 
-## 必要要件
+---
+## ■動作要件
 
 - macOS ※x86系のみ
-- 下記のインストールが行われていること
-  - Oracle Virtualbox
-      - https://www.oracle.com/jp/virtualization/technologies/vm/downloads/virtualbox-downloads.html
-  - Vagrant
-      ```shell
-      $ brew install vagrant
-      ```
-  - Python3
-      ```shell
-      $ brew install python3
-      ```
-  - Ansible
-      ```shell
-      $ brew install ansible
-      ```
 
-## Ansible プロビジョニング準備
+- Oracle Virtualbox
 
-- インベントリファイルを生成
+  - https://www.oracle.com/jp/virtualization/technologies/vm/downloads/virtualbox-downloads.html
+
+- Vagrant
+
   ```shell
-  $ cd ansible
-  $ bash inventories_setup.sh
+  $ brew install vagrant
   ```
 
-- インベントリファイルを検証
+- Python3
+
   ```shell
-  $ cd ansible
-  $ bash inventories_verify.sh
+  $ brew install python3
   ```
 
-- Playbook の内容・書き方エラーチェック
+- Ansible
+
   ```shell
-  $ cd ansible
-  $ bash ansible_lint.sh
+  $ brew install ansible
   ```
 
-## VM 操作方法
+---
+## ■Ansible プロビジョニング準備
 
-### VM 起動
-
-```shell
-$ cd vagrant
-$ vagrant up
-```
-
-- ※初回の VM 起動時には自動的にプロビジョニングも行われる
-
-### プロビジョニング（セットアップ）
+### ▼インベントリファイルを生成
 
 ```shell
-$ cd vagrant
-$ vagrant provision
+$ cd ansible
+$ bash inventories_setup.sh
 ```
 
-- これにより、Ansible が実行される（後述）
-
-### VM 再起動
+### ▼インベントリファイルを検証
 
 ```shell
-$ cd vagrant
-$ vagrant reload
+$ cd ansible
+$ bash inventories_verify.sh
 ```
 
-### VM 起動／再起動と同時にプロビジョニング
+### ▼インベントリファイルの内容確認
 
 ```shell
-$ cd vagrant
-$ vagrant up --provision
-$ vagrant reload --provision
+$ cd ansible
+$ bash inventories_verify.sh --ilst
 ```
 
-### VM 停止
+または
 
 ```shell
-$ cd vagrant
-$ vagrant halt
+$ bash inventories_verify.sh --graph
 ```
 
-### VM 破棄
+または
 
 ```shell
-$ cd vagrant
-$ vagrant destroy
+$ bash inventories_verify.sh --yaml
 ```
 
-## Ansible プロビジョニング
+冗長出力
 
-### [方法1] 直接 ansible-playbook コマンドを実行してプロビジョニング
+```shell
+$ bash inventories_verify.sh --list -vvv
+```
+
+### ▼Playbook の内容・書き方エラーチェック
+
+```shell
+$ cd ansible
+$ bash ansible_lint.sh
+```
+
+- ansible_lint_result.txt が出力される
+
+---
+## ■VM 操作方法
+
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) 参照
+
+---
+## ■Ansible プロビジョニング
+
+### ▼[方法1] 直接 ansible-playbook コマンドを実行してプロビジョニング
 
 ```shell
 $ cd ansible/playbook
 $ ansible-playbook -i inventories/vagrant_hosts.yml site_all_setup.yml
 ```
 
-### [方法2] vagrant から ansible-playbook コマンドを実行してプロビジョニング
+### ▼[方法2] vagrant から ansible-playbook コマンドを実行してプロビジョニング
 
 ```shell
 $ cd vagrant
@@ -115,7 +113,7 @@ $ vagrant provision
 
 - Vagrantfile 内で [方法1] と同様のコマンドが実行されるように設定されている
 
-  - vagrant/Vagrantfile
+  - Vagrantfile
 
     ```ruby
     config.vm.provision :ansible do |ansible|
@@ -130,7 +128,7 @@ $ vagrant provision
     end
     ```
 
-### [方法3] シェルスクリプトから ansible-playbook コマンドを実行してプロビジョニング
+### ▼[方法3] シェルスクリプトから ansible-playbook コマンドを実行してプロビジョニング
 
 ```shell
 $ cd ansible
@@ -165,142 +163,180 @@ $ bash provision_vagrant.sh
     ...
     ```
 
-## セットアップ内容
+---
+## ■セットアップ内容
 
-### OS
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E5%86%85%E5%AE%B9) と同じ
 
-- Rocky Linux 9
-  - RedHat 9 互換
-  - CentOS 後継 OS の一つ
+---
+## ■各サーバーへのアクセス方法
 
-### パッケージ
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E5%90%84%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%96%B9%E6%B3%95) と同じ
 
-- MariaDB（MySQL互換のRDBサーバー）
-- PostgreSQL（RDBサーバー）
-- MongoDB（ドキュメントDBサーバー）
-- Redis（キャッシュサーバー）
-- Nginx（Webサーバー）
-- Node.js（JavaScript開発・実行環境）
+---
+## ■Vagrant 解説
 
-## 各サーバーへのアクセス方法（macOSからのアクセス）
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vagrant-%E8%A7%A3%E8%AA%AC) と同じ
 
-### MariaDB
+---
+## ■プロビジョニング解説
 
-- 準備
+### ▼Vagrant プロビジョニング設定
 
-```shell
-$ brew install mysql-client
-```
+- Vagrantfile
 
-- 接続
-
-```shell
-$ mysql -u admin -h 192.168.56.10 --password=hogehoge mysql
-mysql [admin@192.168.56.1 mysql] >
-```
-
-### PostgreSQL
-
-- 準備
-
-```shell
-$ brew install libpq
-$ echo 'export PATH=$PATH:/usr/local/opt/libpq/bin' >> ~/.zshrc
-```
-
-- 接続
-
-```shell
-$ psql -U admin -h 192.168.56.10 -d postgres
-Password for user admin: hogehoge（パスワード入力）
-postgres=>
-```
-または
-```shell
-$ psql 'postgres://admin:hogehoge@192.168.56.10:5432/postgres?sslmode=disable'
-postgres=>
-```
-
-### MongoDB
-
-- 準備
-
-```shell
-$ brew install mongsh
-```
-
-- 接続
-
-```shell
-$ mongosh 192.168.56.10
-test>
-```
-
-### Redis
-
-- 準備
-
-```shell
-$ brew install redis
-```
-
-- 接続
-
-```shell
-$ redis-cli -h 192.168.56.10
-192.168.56.10:6379>
-```
-
-### Nginx
-
-- 準備
-
-```shell
-$ brew install curl
-```
-
-- 接続
-
-```shell
-$ curl http://192.168.56.10
-...(HTML出力)...
-```
-
-## ディレクトリ構成
-
-- vagrant/ ... vagrant 用
-  - Vagrantfile ... vagrant VM 設定
-- ansible/ ... Ansible 用
-  - playbook/ ... Ansible プレイブック用
-    - inventories/ ... Ansible インベントリ用
-      - templates/ ... Ansible インベントリテンプレート用
-        - ***/ ...
-    - roles/ ... Ansible ロール用
-      - 
-    - playbook_***.yml ... 
-    - site_***.yml ... 
-  - ****.sh ... 
-  - ****.sh ... 
-  - ****.sh ... 
-
-## 解説
-
-### Vagrant の　OS イメージの指定
-
-- Vagrantfile 内の config.vm.box にて、VM の OS イメージを指定
   ```ruby
-  config.vm.box = "generic/rocky9"
+  config.vm.provision :ansible do |ansible|
+    playbook_dir = "../ansible/playbook"
+    ansible.config_file = playbook_dir + "/ansible.cfg"
+    ansible.playbook = playbook_dir + "/site_all_setup.yml"
+    ansible.inventory_path = playbook_dir + "/inventories/vagrant_hosts.yml"
+    ansible.limit = 'all'
+    #ansible.verbose = "vvv"
+    #ansible.tags = "tag1,tag2,..."
+    #ansible.tags = "os,mariadb"
+  end
   ```
 
-### Ansible の使い方の特徴
+### ▼Ansible の使い方の特徴
 
 - インベントリファイルは、一般的な ini 形式ではなく yml 形式を採用
 - インベントリには group_vars を用いずに、一つのインベントリファイルに環境固有の変数をまとめて定義するスタイル
   - group_vars を用いる場合よりもシンプルでわかり易い
-- 複数の環境向けのインベントリを用意することを考慮し、環境固有の設定と共通設定を分けて ansible/playbook/inventories/templates/_*.yml に定義し、ansible/inventories_setup.sh によってそれらを合成して ansible/playbook/inventories/*.yml を出力
-- ansible-lint の標準規則に従った内容で構成
+- 複数の環境向けのインベントリを用意することを考慮（vagrant専用としない）
+  - ansible/playbook/inventories/ 以下では、環境別の設定と共通設定を分けて templates/ にインベントリの元データを定義
+    - templates/_\*_hosts.yml が環境別の設定
+    - templates/fixed/__\*.yml が共通設定
+  - ansible/inventories_setup.sh を実行すると、環境別の設定と共通設定を合成して、inventories/\*_hosts.yml を出力する
+    - ansible/inventories_verify.sh を実行すると、インベントリのエラーチェックおよび内容確認が可能
 - プレイブックは roles と site で構成
   - サーバーの役割ごとのプレイブックをまとめやすいため
+- ansible-lint の標準規則に従った内容で構成
+  - ansible/ansible_list.sh を実行すると、プレイブックのエラーチェックが可能
+  - ansible/playbook/.ansible-lint にて、無視するエラーを設定
+
+---
+## ■ディレクトリ構成
+
+```
+testansible/
+├── README.html
+├── README.md
+├── ansible/                                      ... Ansible 用
+│   ├── playbook/                                 ... Ansible プレイブック用
+│   │   ├── inventories/                          ... Ansible インベントリ用
+│   │   │   ├── templates/                        ... Ansible インベントリテンプレート用
+│   │   │   │   ├── common/                       ... Ansible インベントリ共通テンプレート
+│   │   │   │   │   ├── __footer.yml
+│   │   │   │   │   ├── __groups.yml
+│   │   │   │   │   ├── __header.yml
+│   │   │   │   │   └── __vars.yml
+│   │   │   │   └── _(環境名)_hosts.yml            ... Ansible インベントリ環境別テンプレート
+│   │   │   └── (環境名)_hosts.yml                 ... Ansible インベントリ（環境別）
+│   │   ├── roles/                                ... Ansible ロール用
+│   │   │   ├── info_inventory/                   ... Ansible ロール：インベントリ情報出力
+│   │   │   │   └── tasks/
+│   │   │   │       └── main.yml
+│   │   │   ├── os_base_setup/                    ... Ansible ロール： OS 基本セットアップ
+│   │   │   │   ├── tasks/
+│   │   │   │   │   └── main.yml
+│   │   │   │   └── vars/
+│   │   │   │       └── vars.yml
+│   │   │   ├── os_user_setup/                    ... Ansible ロール： OS ユーザーセットアップ
+│   │   │   │   ├── authorized_keys
+│   │   │   │   │   ├── add/
+│   │   │   │   │   │   └── *.pub
+│   │   │   │   │   └── del/
+│   │   │   │   │       └── *.pub
+│   │   │   │   ├── tasks/
+│   │   │   │   │   └── main.yml
+│   │   │   │   └── templates/
+│   │   │   │       └── sudoers-user.j2
+│   │   │   ├── package_mariadb_client_setup/     ... Ansible ロール：パッケージ： MariaDB クライアントセットアップ
+│   │   │   │   └── tasks/
+│   │   │   │       └── main.yml
+│   │   │   ├── package_mariadb_server_setup/     ... Ansible ロール：パッケージ： MariaDB サーバーセットアップ
+│   │   │   │   ├── handlers/
+│   │   │   │   │   └── main.yml
+│   │   │   │   ├── tasks/
+│   │   │   │   │   ├── main.yml
+│   │   │   │   │   └── restart_mariadb_server.yml
+│   │   │   │   └── vars/
+│   │   │   │       └── vars.yml
+│   │   │   ├── package_mongodb_client_setup/     ... Ansible ロール：パッケージ： MongoDB クライアントセットアップ
+│   │   │   │   └── tasks/
+│   │   │   │       └── main.yml
+│   │   │   ├── package_mongodb_common_setup/     ... Ansible ロール：パッケージ： MongoDB 共通セットアップ
+│   │   │   │   ├── files/
+│   │   │   │   │   ├── mongodb-org-6.0-redhat8.repo
+│   │   │   │   │   └── mongodb-org-6.0-redhat9.repo
+│   │   │   │   ├── tasks/
+│   │   │   │   │   └── main.yml
+│   │   │   │   └── vars/
+│   │   │   │       └── vars.yml
+│   │   │   ├── package_mongodb_server_setup/     ... Ansible ロール：パッケージ： MongoDB サーバーセットアップ
+│   │   │   │   ├── handlers/
+│   │   │   │   │   └── main.yml
+│   │   │   │   ├── tasks/
+│   │   │   │   │   ├── main.yml
+│   │   │   │   │   └── restart_mongodb_server.yml
+│   │   │   │   └── vars/
+│   │   │   │       └── vars.yml
+│   │   │   ├── package_nginx_server_setup/       ... Ansible ロール：パッケージ： Nginx サーバーセットアップ
+│   │   │   │   ├── handlers/
+│   │   │   │   │   └── main.yml
+│   │   │   │   └── tasks/
+│   │   │   │       ├── main.yml
+│   │   │   │       └── restart_nginx_server.yml
+│   │   │   ├── package_nodejs_setup/             ... Ansible ロール：パッケージ： Node.js セットアップ
+│   │   │   │   └── tasks/
+│   │   │   │       └── main.yml
+│   │   │   ├── package_postgresql_client_setup/  ... Ansible ロール：パッケージ： PostgreSQL クライアントセットアップ
+│   │   │   │   └── tasks/
+│   │   │   │       └── main.yml
+│   │   │   ├── package_postgresql_server_setup/  ... Ansible ロール：パッケージ： PostgreSQL サーバーセットアップ
+│   │   │   │   ├── handlers/
+│   │   │   │   │   └── main.yml
+│   │   │   │   ├── tasks/
+│   │   │   │   │   ├── main.yml
+│   │   │   │   │   └── restart_postgresql_server.yml
+│   │   │   │   └── vars/
+│   │   │   │       └── vars.yml
+│   │   │   ├── package_redis_client_setup/       ... Ansible ロール：パッケージ： Redis クライアントセットアップ
+│   │   │   │   └── tasks/
+│   │   │   │       └── main.yml
+│   │   │   └── package_redis_server_setup/       ... Ansible ロール：パッケージ： Redis サーバーセットアップ
+│   │   │       ├── handlers/
+│   │   │       │   └── main.yml
+│   │   │       ├── tasks/
+│   │   │       │   ├── main.yml
+│   │   │       │   └── restart_redis_server.yml
+│   │   │       └── vars/
+│   │   │           └── vars.yml
+│   │   ├── vars/                                 ... Ansible 共通変数用
+│   │   │   └── common_vars.yml
+│   │   ├── .ansible-lint                         ... Ansible-lint 設定
+│   │   ├── ansible.cfg                           ... Ansible 基本設定
+│   │   ├── playbook_info_print.yml               ... Ansible プレイブック：情報表示
+│   │   ├── playbook_os_setup.yml                 ... Ansible プレイブック： OSセットアップ
+│   │   ├── playbook_package_mariadb_setup.yml    ... Ansible プレイブック： MariaDB セットアップ
+│   │   ├── playbook_package_mongodb_setup.yml    ... Ansible プレイブック： MongoDB セットアップ
+│   │   ├── playbook_package_nginx_setup.yml      ... Ansible プレイブック： Nginx セットアップ
+│   │   ├── playbook_package_nodejs_setup.yml     ... Ansible プレイブック： Node.js セットアップ
+│   │   ├── playbook_package_postgresql_setup.yml ... Ansible プレイブック： PostgreSQL セットアップ
+│   │   ├── playbook_package_redis_setup.yml      ... Ansible プレイブック： Redis セットアップ
+│   │   └── site_all_setup.yml                    ... Ansible サイト： 全セットアップ
+│   ├── _env.rc
+│   ├── _provision.rc
+│   ├── ansible_lint.sh                           ... Ansible-lint 実行スクリプト
+│   ├── ansible_lint_result.txt                   ... Ansible-lint 実行結果
+│   ├── inventories_setup.sh                      ... Ansible インベントリセットアップスクリプト
+│   ├── inventories_verify.sh                     ... Ansible インベントリ検証スクリプト
+│   └── provision_vagrant.sh                      ... Ansible 実行スクリプト
+└── vagrant/                                      ... vagrant 用
+    ├── share/                                    ... vagrant 共有ディレクトリ
+    └── Vagrantfile                               ... vagrant VM 設定
+```
 
 ----
 以上

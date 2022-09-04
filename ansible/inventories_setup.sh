@@ -38,13 +38,13 @@ do
         fi
         sed -e 's/\$FILE/'$INVENTORY_FILE'/g' \
             -e 's/\$NAME/'$INVENTORY_FILE_NAME'/g' \
-            $INVENTORIES_TEMPLATES_DIR/__header.yml > $INVENTORY_PATH
+            $INVENTORIES_COMMON_TEMPLATES_DIR/__header.yml > $INVENTORY_PATH
         sed -n "${HOSTS_BEGIN_LINE},${HOSTS_END_LINE}p" $FILE >> $INVENTORY_PATH
-        cat $INVENTORIES_TEMPLATES_DIR/__groups.yml >> $INVENTORY_PATH
-        cat $INVENTORIES_TEMPLATES_DIR/__vars.yml >> $INVENTORY_PATH
+        cat $INVENTORIES_COMMON_TEMPLATES_DIR/__groups.yml >> $INVENTORY_PATH
+        cat $INVENTORIES_COMMON_TEMPLATES_DIR/__vars.yml >> $INVENTORY_PATH
         if [ "$VARS_BEGIN_LINE" != "" ]; then
             sed -n "${VARS_BEGIN_LINE},${VARS_END_LINE}p" $FILE >> $INVENTORY_PATH
         fi
-        cat $INVENTORIES_TEMPLATES_DIR/__footer.yml >> $INVENTORY_PATH
+        cat $INVENTORIES_COMMON_TEMPLATES_DIR/__footer.yml >> $INVENTORY_PATH
     fi
 done

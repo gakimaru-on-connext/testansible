@@ -238,12 +238,12 @@ all:
     # OS：基本設定
     # --------------------
     setup_os_base: true
-    #with_remi_repository: true
-    #with_epel_repository: true
-    #upgrade_all_packages: true
-    with_remi_repository: false
-    with_epel_repository: false
-    upgrade_all_packages: false
+    with_remi_repository: true
+    with_epel_repository: true
+    upgrade_all_packages: true
+    #with_remi_repository: false
+    #with_epel_repository: false
+    #upgrade_all_packages: false
     lang_package: langpacks-ja
     os_locale: ja_JP.UTF-8
     os_timezone: Asia/Tokyo

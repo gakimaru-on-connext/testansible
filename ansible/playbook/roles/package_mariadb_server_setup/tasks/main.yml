@@ -93,6 +93,8 @@
     - name: Setup root user password 2
       ansible.builtin.file:
         path: "{{ already_root_password_path_v10 }}"
+        owner: "{{ become_super_user }}"
+        mode: "0644"
         state: touch
 
     # ----------------------------------------------------------
