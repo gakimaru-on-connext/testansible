@@ -21,7 +21,7 @@
 
 - Vagrant を用いた VM 上へのOSセットアップのテスト
 - Ansible によるセットアップを行う
-  - 本場環境のプロビジョニングを想定して、複数の VM に対する同時セットアップを構成
+  - 本場環境のプロビジョニングを想定して、複数の VM に対する同時セットアップにも対応（コメントアウト状態）
 - シェル（スクリプト）によるセットアップと比較できるように、同様の内容の Ansible 版も用意
   - [https://github.com/gakimaru-on-connext/testvagrant](https://github.com/gakimaru-on-connext/testvagrant)
 
