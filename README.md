@@ -505,31 +505,31 @@ $ bash provision_vagrant.sh
 ---
 ## ■ディレクトリ構成
 
-```
+```shell
 testansible/
 ├── README.html
 ├── README.md
-├── ansible/                                      ... Ansible 用
-│   ├── playbook/                                 ... Ansible プレイブック用
-│   │   ├── inventories/                          ... Ansible インベントリ用
-│   │   │   ├── templates/                        ... Ansible インベントリテンプレート用
-│   │   │   │   ├── common/                       ... Ansible インベントリ共通テンプレート
+├── ansible/                                      # Ansible 用
+│   ├── playbook/                                 # Ansible プレイブック用
+│   │   ├── inventories/                          # Ansible インベントリ用
+│   │   │   ├── templates/                        # Ansible インベントリテンプレート用
+│   │   │   │   ├── common/                       # Ansible インベントリ共通テンプレート
 │   │   │   │   │   ├── __footer.yml
 │   │   │   │   │   ├── __groups.yml
 │   │   │   │   │   ├── __header.yml
 │   │   │   │   │   └── __vars.yml
-│   │   │   │   └── _(環境名)_hosts.yml            ... Ansible インベントリ環境別テンプレート
-│   │   │   └── (環境名)_hosts.yml                 ... Ansible インベントリ（環境別）
-│   │   ├── roles/                                ... Ansible ロール用
-│   │   │   ├── info_inventory/                   ... Ansible ロール：インベントリ情報出力
+│   │   │   │   └── _(環境名)_hosts.yml            # Ansible インベントリ環境別テンプレート
+│   │   │   └── (環境名)_hosts.yml                 # Ansible インベントリ（環境別）
+│   │   ├── roles/                                # Ansible ロール用
+│   │   │   ├── info_inventory/                   # Ansible ロール：インベントリ情報出力
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── os_base_setup/                    ... Ansible ロール： OS 基本セットアップ
+│   │   │   ├── os_base_setup/                    # Ansible ロール： OS 基本セットアップ
 │   │   │   │   ├── tasks/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── os_user_setup/                    ... Ansible ロール： OS ユーザーセットアップ
+│   │   │   ├── os_user_setup/                    # Ansible ロール： OS ユーザーセットアップ
 │   │   │   │   ├── authorized_keys
 │   │   │   │   │   ├── add/
 │   │   │   │   │   │   └── *.pub
@@ -539,10 +539,10 @@ testansible/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── templates/
 │   │   │   │       └── sudoers-user.j2
-│   │   │   ├── package_mariadb_client_setup/     ... Ansible ロール：パッケージ： MariaDB クライアントセットアップ
+│   │   │   ├── package_mariadb_client_setup/     # Ansible ロール：パッケージ： MariaDB クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_mariadb_server_setup/     ... Ansible ロール：パッケージ： MariaDB サーバーセットアップ
+│   │   │   ├── package_mariadb_server_setup/     # Ansible ロール：パッケージ： MariaDB サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   ├── tasks/
@@ -550,10 +550,10 @@ testansible/
 │   │   │   │   │   └── restart_mariadb_server.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_mongodb_client_setup/     ... Ansible ロール：パッケージ： MongoDB クライアントセットアップ
+│   │   │   ├── package_mongodb_client_setup/     # Ansible ロール：パッケージ： MongoDB クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_mongodb_common_setup/     ... Ansible ロール：パッケージ： MongoDB 共通セットアップ
+│   │   │   ├── package_mongodb_common_setup/     # Ansible ロール：パッケージ： MongoDB 共通セットアップ
 │   │   │   │   ├── files/
 │   │   │   │   │   ├── mongodb-org-6.0-redhat8.repo
 │   │   │   │   │   └── mongodb-org-6.0-redhat9.repo
@@ -561,7 +561,7 @@ testansible/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_mongodb_server_setup/     ... Ansible ロール：パッケージ： MongoDB サーバーセットアップ
+│   │   │   ├── package_mongodb_server_setup/     # Ansible ロール：パッケージ： MongoDB サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   ├── tasks/
@@ -569,19 +569,19 @@ testansible/
 │   │   │   │   │   └── restart_mongodb_server.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_nginx_server_setup/       ... Ansible ロール：パッケージ： Nginx サーバーセットアップ
+│   │   │   ├── package_nginx_server_setup/       # Ansible ロール：パッケージ： Nginx サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── tasks/
 │   │   │   │       ├── main.yml
 │   │   │   │       └── restart_nginx_server.yml
-│   │   │   ├── package_nodejs_setup/             ... Ansible ロール：パッケージ： Node.js セットアップ
+│   │   │   ├── package_nodejs_setup/             # Ansible ロール：パッケージ： Node.js セットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_postgresql_client_setup/  ... Ansible ロール：パッケージ： PostgreSQL クライアントセットアップ
+│   │   │   ├── package_postgresql_client_setup/  # Ansible ロール：パッケージ： PostgreSQL クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_postgresql_server_setup/  ... Ansible ロール：パッケージ： PostgreSQL サーバーセットアップ
+│   │   │   ├── package_postgresql_server_setup/  # Ansible ロール：パッケージ： PostgreSQL サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   ├── tasks/
@@ -589,10 +589,10 @@ testansible/
 │   │   │   │   │   └── restart_postgresql_server.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_redis_client_setup/       ... Ansible ロール：パッケージ： Redis クライアントセットアップ
+│   │   │   ├── package_redis_client_setup/       # Ansible ロール：パッケージ： Redis クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   └── package_redis_server_setup/       ... Ansible ロール：パッケージ： Redis サーバーセットアップ
+│   │   │   └── package_redis_server_setup/       # Ansible ロール：パッケージ： Redis サーバーセットアップ
 │   │   │       ├── handlers/
 │   │   │       │   └── main.yml
 │   │   │       ├── tasks/
@@ -600,29 +600,29 @@ testansible/
 │   │   │       │   └── restart_redis_server.yml
 │   │   │       └── vars/
 │   │   │           └── vars.yml
-│   │   ├── vars/                                 ... Ansible 共通変数用
+│   │   ├── vars/                                 # Ansible 共通変数用
 │   │   │   └── common_vars.yml
-│   │   ├── .ansible-lint                         ... Ansible-lint 設定
-│   │   ├── ansible.cfg                           ... Ansible 基本設定
-│   │   ├── playbook_info_print.yml               ... Ansible プレイブック：情報表示
-│   │   ├── playbook_os_setup.yml                 ... Ansible プレイブック： OSセットアップ
-│   │   ├── playbook_package_mariadb_setup.yml    ... Ansible プレイブック： MariaDB セットアップ
-│   │   ├── playbook_package_mongodb_setup.yml    ... Ansible プレイブック： MongoDB セットアップ
-│   │   ├── playbook_package_nginx_setup.yml      ... Ansible プレイブック： Nginx セットアップ
-│   │   ├── playbook_package_nodejs_setup.yml     ... Ansible プレイブック： Node.js セットアップ
-│   │   ├── playbook_package_postgresql_setup.yml ... Ansible プレイブック： PostgreSQL セットアップ
-│   │   ├── playbook_package_redis_setup.yml      ... Ansible プレイブック： Redis セットアップ
-│   │   └── site_all_setup.yml                    ... Ansible サイト： 全セットアップ
+│   │   ├── .ansible-lint                         # Ansible-lint 設定
+│   │   ├── ansible.cfg                           # Ansible 基本設定
+│   │   ├── playbook_info_print.yml               # Ansible プレイブック：情報表示
+│   │   ├── playbook_os_setup.yml                 # Ansible プレイブック： OSセットアップ
+│   │   ├── playbook_package_mariadb_setup.yml    # Ansible プレイブック： MariaDB セットアップ
+│   │   ├── playbook_package_mongodb_setup.yml    # Ansible プレイブック： MongoDB セットアップ
+│   │   ├── playbook_package_nginx_setup.yml      # Ansible プレイブック： Nginx セットアップ
+│   │   ├── playbook_package_nodejs_setup.yml     # Ansible プレイブック： Node.js セットアップ
+│   │   ├── playbook_package_postgresql_setup.yml # Ansible プレイブック： PostgreSQL セットアップ
+│   │   ├── playbook_package_redis_setup.yml      # Ansible プレイブック： Redis セットアップ
+│   │   └── site_all_setup.yml                    # Ansible サイト： 全セットアップ
 │   ├── _env.rc
 │   ├── _provision.rc
-│   ├── ansible_lint.sh                           ... Ansible-lint 実行スクリプト
-│   ├── ansible_lint_result.txt                   ... Ansible-lint 実行結果
-│   ├── inventories_setup.sh                      ... Ansible インベントリセットアップスクリプト
-│   ├── inventories_verify.sh                     ... Ansible インベントリ検証スクリプト
-│   └── provision_(環境名).sh                      ... Ansible 実行スクリプト
-└── vagrant/                                      ... vagrant 用
-    ├── share/                                    ... vagrant 共有ディレクトリ
-    └── Vagrantfile                               ... vagrant VM 設定
+│   ├── ansible_lint.sh                           # Ansible-lint 実行スクリプト
+│   ├── ansible_lint_result.txt                   # Ansible-lint 実行結果
+│   ├── inventories_setup.sh                      # Ansible インベントリセットアップスクリプト
+│   ├── inventories_verify.sh                     # Ansible インベントリ検証スクリプト
+│   └── provision_(環境名).sh                      # Ansible 実行スクリプト
+└── vagrant/                                      # vagrant 用
+    ├── share/                                    # vagrant 共有ディレクトリ
+    └── Vagrantfile                               # vagrant VM 設定
 ```
 
 ----
