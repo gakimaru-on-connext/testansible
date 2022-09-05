@@ -22,7 +22,7 @@
 - Vagrant を用いた VM 上へのOSセットアップのテスト
 - Ansible によるセットアップを行う
   - 本場環境のプロビジョニングを想定して、複数の VM に対する同時セットアップにも対応（コメントアウト状態）
-- シェル（スクリプト）によるセットアップと比較できるように、同様の内容の Ansible 版も用意
+- シェル（スクリプト）によるセットアップと比較するためのリポジトリも用意
   - [https://github.com/gakimaru-on-connext/testvagrant](https://github.com/gakimaru-on-connext/testvagrant)
 
 ---
@@ -111,17 +111,6 @@ $ bash ansible_lint.sh
 ## ■VM 操作方法
 
 - [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) 参照
-
-<!-- omit in toc -->
-### ▼VM ログイン
-
-```shell
-$ cd vagrant
-$ vagrant ssh (ホスト名)
-```
-
-- 複数ホストを扱うように構成しているため、ログインの際にはホスト名を指定する必要がある
-- ホスト名は、Vagrantfile の設定で host01, host02 を設定
 
 ---
 ## ■Ansible プロビジョニング実行
