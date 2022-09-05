@@ -219,7 +219,7 @@ $ bash provision_vagrant.sh
 ---
 ## ■解説：Vagrant 設定
 
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A) 参照
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%ACvagrant-%E8%A8%AD%E5%AE%9A) 参照
 
 ---
 ## ■解説：プロビジョニング
