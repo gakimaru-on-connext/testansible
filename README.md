@@ -538,6 +538,7 @@ testansible/
 │   │   │   │   ├── tasks/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── templates/
+│   │   │   │       ├─ .bashrc.ext.j2
 │   │   │   │       └── sudoers-user.j2
 │   │   │   ├── package_mariadb_client_setup/     # Ansible ロール：パッケージ： MariaDB クライアントセットアップ
 │   │   │   │   └── tasks/
