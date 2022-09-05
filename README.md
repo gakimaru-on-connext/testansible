@@ -6,12 +6,12 @@
 ---
 - [■概要](#概要)
 - [■動作要件](#動作要件)
-- [■Ansible プロビジョニング準備](#ansible-プロビジョニング準備)
 - [■VM 操作方法](#vm-操作方法)
+- [■Ansible プロビジョニング準備](#ansible-プロビジョニング準備)
 - [■Ansible プロビジョニング実行](#ansible-プロビジョニング実行)
 - [■セットアップ内容](#セットアップ内容)
 - [■各サーバーへのアクセス方法](#各サーバーへのアクセス方法)
-- [■解説： Vagrant 設定](#解説-vagrant-設定)
+- [■解説：Vagrant 設定](#解説vagrant-設定)
 - [■解説：プロビジョニング](#解説プロビジョニング)
 - [■解説：複数 VM の起動とプロビジョニング](#解説複数-vm-の起動とプロビジョニング)
 - [■ディレクトリ構成](#ディレクトリ構成)
@@ -51,6 +51,11 @@
   ```shell
   $ brew install ansible
   ```
+
+---
+## ■VM 操作方法
+
+- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) 参照
 
 ---
 ## ■Ansible プロビジョニング準備
@@ -106,11 +111,6 @@ $ bash ansible_lint.sh
 ```
 
 - ansible_lint_result.txt が出力される
-
----
-## ■VM 操作方法
-
-- [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#vm-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95) 参照
 
 ---
 ## ■Ansible プロビジョニング実行
@@ -217,7 +217,7 @@ $ bash provision_vagrant.sh
 - アクセス先のアドレスは 192.168.56.10 から 192.168.56.11 に変更する必要あり
 
 ---
-## ■解説： Vagrant 設定
+## ■解説：Vagrant 設定
 
 - [testvagrant](https://github.com/gakimaru-on-connext/testvagrant#%E8%A7%A3%E8%AA%AC-vagrant-%E8%A8%AD%E5%AE%9A) 参照
 
@@ -513,12 +513,12 @@ testansible/
 │   │   │   ├── info_inventory/                   # Ansible ロール：インベントリ情報出力
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── os_base_setup/                    # Ansible ロール： OS 基本セットアップ
+│   │   │   ├── os_base_setup/                    # Ansible ロール：OS 基本セットアップ
 │   │   │   │   ├── tasks/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── os_user_setup/                    # Ansible ロール： OS ユーザーセットアップ
+│   │   │   ├── os_user_setup/                    # Ansible ロール：OS ユーザーセットアップ
 │   │   │   │   ├── authorized_keys
 │   │   │   │   │   ├── add/
 │   │   │   │   │   │   └── *.pub
@@ -529,10 +529,10 @@ testansible/
 │   │   │   │   └── templates/
 │   │   │   │       ├─ .bashrc.ext.j2
 │   │   │   │       └── sudoers-user.j2
-│   │   │   ├── package_mariadb_client_setup/     # Ansible ロール：パッケージ： MariaDB クライアントセットアップ
+│   │   │   ├── package_mariadb_client_setup/     # Ansible ロール：パッケージ：MariaDB クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_mariadb_server_setup/     # Ansible ロール：パッケージ： MariaDB サーバーセットアップ
+│   │   │   ├── package_mariadb_server_setup/     # Ansible ロール：パッケージ：MariaDB サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   ├── tasks/
@@ -540,10 +540,10 @@ testansible/
 │   │   │   │   │   └── restart_mariadb_server.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_mongodb_client_setup/     # Ansible ロール：パッケージ： MongoDB クライアントセットアップ
+│   │   │   ├── package_mongodb_client_setup/     # Ansible ロール：パッケージ：MongoDB クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_mongodb_common_setup/     # Ansible ロール：パッケージ： MongoDB 共通セットアップ
+│   │   │   ├── package_mongodb_common_setup/     # Ansible ロール：パッケージ：MongoDB 共通セットアップ
 │   │   │   │   ├── files/
 │   │   │   │   │   ├── mongodb-org-6.0-redhat8.repo
 │   │   │   │   │   └── mongodb-org-6.0-redhat9.repo
@@ -551,7 +551,7 @@ testansible/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_mongodb_server_setup/     # Ansible ロール：パッケージ： MongoDB サーバーセットアップ
+│   │   │   ├── package_mongodb_server_setup/     # Ansible ロール：パッケージ：MongoDB サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   ├── tasks/
@@ -559,19 +559,19 @@ testansible/
 │   │   │   │   │   └── restart_mongodb_server.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_nginx_server_setup/       # Ansible ロール：パッケージ： Nginx サーバーセットアップ
+│   │   │   ├── package_nginx_server_setup/       # Ansible ロール：パッケージ：Nginx サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   └── tasks/
 │   │   │   │       ├── main.yml
 │   │   │   │       └── restart_nginx_server.yml
-│   │   │   ├── package_nodejs_setup/             # Ansible ロール：パッケージ： Node.js セットアップ
+│   │   │   ├── package_nodejs_setup/             # Ansible ロール：パッケージ：Node.js セットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_postgresql_client_setup/  # Ansible ロール：パッケージ： PostgreSQL クライアントセットアップ
+│   │   │   ├── package_postgresql_client_setup/  # Ansible ロール：パッケージ：PostgreSQL クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_postgresql_server_setup/  # Ansible ロール：パッケージ： PostgreSQL サーバーセットアップ
+│   │   │   ├── package_postgresql_server_setup/  # Ansible ロール：パッケージ：PostgreSQL サーバーセットアップ
 │   │   │   │   ├── handlers/
 │   │   │   │   │   └── main.yml
 │   │   │   │   ├── tasks/
@@ -579,10 +579,10 @@ testansible/
 │   │   │   │   │   └── restart_postgresql_server.yml
 │   │   │   │   └── vars/
 │   │   │   │       └── vars.yml
-│   │   │   ├── package_redis_client_setup/       # Ansible ロール：パッケージ： Redis クライアントセットアップ
+│   │   │   ├── package_redis_client_setup/       # Ansible ロール：パッケージ：Redis クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   └── package_redis_server_setup/       # Ansible ロール：パッケージ： Redis サーバーセットアップ
+│   │   │   └── package_redis_server_setup/       # Ansible ロール：パッケージ：Redis サーバーセットアップ
 │   │   │       ├── handlers/
 │   │   │       │   └── main.yml
 │   │   │       ├── tasks/
@@ -595,14 +595,14 @@ testansible/
 │   │   ├── .ansible-lint                         # Ansible-lint 設定
 │   │   ├── ansible.cfg                           # Ansible 基本設定
 │   │   ├── playbook_info_print.yml               # Ansible プレイブック：情報表示
-│   │   ├── playbook_os_setup.yml                 # Ansible プレイブック： OSセットアップ
-│   │   ├── playbook_package_mariadb_setup.yml    # Ansible プレイブック： MariaDB セットアップ
-│   │   ├── playbook_package_mongodb_setup.yml    # Ansible プレイブック： MongoDB セットアップ
-│   │   ├── playbook_package_nginx_setup.yml      # Ansible プレイブック： Nginx セットアップ
-│   │   ├── playbook_package_nodejs_setup.yml     # Ansible プレイブック： Node.js セットアップ
-│   │   ├── playbook_package_postgresql_setup.yml # Ansible プレイブック： PostgreSQL セットアップ
-│   │   ├── playbook_package_redis_setup.yml      # Ansible プレイブック： Redis セットアップ
-│   │   └── site_all_setup.yml                    # Ansible サイト： 全セットアップ
+│   │   ├── playbook_os_setup.yml                 # Ansible プレイブック：OSセットアップ
+│   │   ├── playbook_package_mariadb_setup.yml    # Ansible プレイブック：MariaDB セットアップ
+│   │   ├── playbook_package_mongodb_setup.yml    # Ansible プレイブック：MongoDB セットアップ
+│   │   ├── playbook_package_nginx_setup.yml      # Ansible プレイブック：Nginx セットアップ
+│   │   ├── playbook_package_nodejs_setup.yml     # Ansible プレイブック：Node.js セットアップ
+│   │   ├── playbook_package_postgresql_setup.yml # Ansible プレイブック：PostgreSQL セットアップ
+│   │   ├── playbook_package_redis_setup.yml      # Ansible プレイブック：Redis セットアップ
+│   │   └── site_all_setup.yml                    # Ansible サイト：全セットアップ
 │   ├── _env.rc
 │   ├── _provision.rc
 │   ├── ansible_lint.sh                           # Ansible-lint 実行スクリプト
