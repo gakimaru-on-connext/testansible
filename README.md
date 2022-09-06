@@ -546,7 +546,7 @@ testansible/
 │   │   │   ├── package_mongodb_client_setup/     # Ansible ロール：パッケージ：MongoDB クライアントセットアップ
 │   │   │   │   └── tasks/
 │   │   │   │       └── main.yml
-│   │   │   ├── package_mongodb_common_setup/     # Ansible ロール：パッケージ：MongoDB 共通セットアップ
+│   │   │   ├── package_mongodb_common_setup/     # Ansible ロール：パッケージ：MongoDB サーバー／クライアント共通セットアップ
 │   │   │   │   ├── files/
 │   │   │   │   │   ├── mongodb-org-6.0-redhat8.repo
 │   │   │   │   │   └── mongodb-org-6.0-redhat9.repo
@@ -614,7 +614,7 @@ testansible/
 │   ├── inventories_verify.sh                     # Ansible インベントリ検証スクリプト
 │   └── provision_(環境名).sh                      # Ansible 実行スクリプト
 └── vagrant/                                      # vagrant 用
-    ├── share/                                    # vagrant 共有ディレクトリ
+    ├── share/                                    # vagrant 共有ディレクトリ（未使用）
     └── Vagrantfile                               # vagrant VM 設定
 ```
 
