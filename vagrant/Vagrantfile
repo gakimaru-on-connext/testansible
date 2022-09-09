@@ -147,6 +147,7 @@ Vagrant.configure("2") do |config|
   #  end
   #end
 
+  # [初回起動時のみ] Ansible で OS と Docker をセットアップ
   config.vm.provision :ansible do |ansible|
     playbook_dir = "../ansible/playbook"
     ansible.config_file = playbook_dir + "/ansible.cfg"
