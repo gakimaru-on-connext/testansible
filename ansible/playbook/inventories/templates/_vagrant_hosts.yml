@@ -296,7 +296,7 @@ all:
     postgresql_admin_password: hogehoge
     # postgresql_admin_hashed_password: echo "md5$(echo -n $postgresql_admin_password$postgresql_admin_user | md5 | awk '{print $1}')"
     postgresql_admin_hashed_password: md5861ff33bef7b81deeff2b2474733c888
-    postgresql_admin_accessable_host: 192.168.56.0/24
+    postgresql_admin_accessable_host: 192.168.56.0/21
     postgresql_encoding: UTF-8
     # --------------------
     # パッケージ：ドキュメントDB設定
